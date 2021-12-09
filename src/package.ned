@@ -1,0 +1,3 @@
+package mainproject;
+
+@license(LGPL);
