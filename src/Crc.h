@@ -14,6 +14,7 @@ public:
     virtual ~Crc();
 
     string str2Num(string str, int base);
+    
     unsigned int crc8(string str);
 
 

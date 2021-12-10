@@ -44,16 +44,6 @@ unsigned int Crc::crc8(string str)
 {
     // This function calculates the CRC8 of the given String.
 
-    unsigned int poly = 0b1001; // x^8 + x^2 + x^1 + 1
-    int polyLen = 4;
-
-    //string binStr = str2Num(str);
-    string binStr = "10100001";
-    int strLen = binStr.length();
-    cout << "String is " << binStr << endl
-         << "strLen is " << strLen << endl;
-    int crc = 0;
-
     /*
    Steps: MODULO 2 DIVISON binStr / poly
         1. XOR polyLen bits of the divedend "binStr" with poly. <=== Remainder
@@ -63,73 +53,48 @@ unsigned int Crc::crc8(string str)
 
    */
 
-    int divedendSlice = -1;
-    int remainder = -1;
+    // we use a test polynomial : X^3 + 1
+    const int polyLen = 9;
+    bitset<polyLen> poly = 0b100001110;
+    //bitset<polyLen> poly = 0b1001;
 
-    // [STEP 1]
-    // Take "Slice" first %polyLen% bits of binStr
-    divedendSlice = stoi(binStr.substr(0, polyLen), 0, 2);
-    cout << "divedend slice is " << bitset<4>(divedendSlice) << endl;
+    // take a slice of the divedend that is polyLen bits long
+    string divedend = str2Num(str);
+    //string divedend = "10011101";
+    //string divedend = "10100001";
+    string divedendSlice = divedend.substr(0, polyLen);
 
-    // XOR the slice with our generator polynomial
-    remainder = divedendSlice ^ poly;
-    cout << "Remainder no.1 is " << bitset<4>(remainder) << endl;
+    // Convert from binary string to bitset
+    bitset<polyLen> divedendSliceBits(divedendSlice);
 
-    int shiftCounter = 0;
-    for (int idx = 0; idx < strLen - polyLen + 1; idx++)
+    // XOR the slice with the polynomial and put the result in remainder
+    bitset<polyLen> remainder = divedendSliceBits ^ poly;
+    cout << "First Remainder = " << remainder.to_string() << endl;
+
+    // Append a bit from the divedend to the remainder then keep XORing
+    int remCtr = 0;
+    for (int i = 0; i < divedend.length() - polyLen; i++)
     {
 
-        cout << "IDX: " << idx << endl;
-        // [STEP 2]
-        // Append one bit from the divedend
-        shiftCounter = polyLen + idx + 1;
-        while (remainder < poly)
+        while (remainder.to_ulong() < poly.to_ulong())
         {
 
-            bitset<1> bit(binStr[shiftCounter]);
-           
+            cout << "Appending Bit: " << (bitset<polyLen>(divedend[i + polyLen])).to_string()[polyLen - 1] << endl;
 
-            remainder = (remainder << 1) | bit.to_ulong();
+            remainder = (remainder << 1) | bitset<polyLen>(divedend[i + polyLen]); // appends a bit from the divedend
 
-            cout << "Appending BIT [" << bit << "], bit number " << shiftCounter << " to Remainder, ===> " << bitset<4>(remainder) << endl;
-            shiftCounter++;
-            if (shiftCounter == binStr.length())
-            {
-                cout << "EXITING FROM LOOP" << endl;
-                remainder ^= poly;
-                return remainder;
-            }
+            cout << "Remainder after appending = " << bitset<polyLen>(remainder).to_string() << endl;
+            i++;
         }
-
-        remainder ^= poly;
-        cout << "Remainder no." << idx + 2 << " is " << bitset<4>(remainder) << endl;
-
-        // while (remainder < poly)
-        // {
-
-        if (polyLen + idx == binStr.length())
-        {
-            cout << "exiting from outside" << endl;
-            return remainder;
-        }
-
-        //     cout << "Appending a bit [" << binStr[polyLen + curr + shiftCounter + 1] << "] from the divedend to the remainder:" << endl;
-        //     remainder = (remainder << 1) | bitset<1>(binStr[polyLen + curr + shiftCounter +1]).to_ulong();
-        //     shiftCounter++;
-        //     /// TODO: Recheck last line lmao
-        //     cout << "Remainder After Appending: " << bitset<4>(remainder) << endl;
-        // }
-        // remainder ^= poly;
-        // cout << "Remainder no." << curr + 2 << " is " << bitset<4>(remainder) << endl;
-
-        // [STEP 3]
-        // Repeat
+        i--;
+        remainder = remainder ^ poly;
+        cout << "Remainder No. " << remCtr + 2 << " = " << remainder.to_string() << endl;
+        remCtr++;
     }
 
-    // cout << "SUBSTRING = " << stoi(binStr.substr(0, polyLen)) << endl;
+    cout << "Final remainder = " << remainder.to_string().substr(1) << endl;
 
-    // cout <<"AFTER CONV:" <<divedend;
-    return remainder;
+    return remainder.to_ulong();
 }
 
 Crc::~Crc()

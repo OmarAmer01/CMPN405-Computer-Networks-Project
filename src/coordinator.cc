@@ -22,10 +22,8 @@ Define_Module(Coordinator);
 void Coordinator::initialize()
 {
     Crc *crc = new Crc();
-    // TODO - Generated method body
-     string testStr = "The Quick Brown Fox Jumps Over the Lazy Dog";
-    // cout << "strToNum: " << crc->str2Num(testStr, 2) << endl;
-     cout << bitset<8>(crc->crc8(testStr));
+    string testStr = "The Quick Brown Fox Jumps Over the Lazy Dog.";
+    cout << crc->crc8(testStr);
 }
 
 void Coordinator::handleMessage(cMessage *msg)
