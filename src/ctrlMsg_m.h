@@ -68,9 +68,7 @@ private:
 protected:
   // protected and unimplemented operator==(), to prevent accidental usage
   bool operator==(const CtrlMsg_Base &);
-
   // make constructors protected to avoid instantiation
-  // NO.
 
   // make assignment operator protected to force the user override it
   CtrlMsg_Base &operator=(const CtrlMsg_Base &other);
@@ -79,11 +77,9 @@ public:
   CtrlMsg_Base(const char *name = nullptr, short kind = 0);
   CtrlMsg_Base(const CtrlMsg_Base &other);
   virtual ~CtrlMsg_Base();
-  virtual CtrlMsg_Base *dup() const override { return new CtrlMsg_Base(*this); }
+  virtual CtrlMsg_Base *dup() const override {return new CtrlMsg_Base(*this); }
   virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
   virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
-
-
 
   // field getter/setter methods
   virtual int getNodeId() const;

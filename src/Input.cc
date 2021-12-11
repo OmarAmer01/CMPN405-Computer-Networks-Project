@@ -82,6 +82,41 @@ vector<coordFileLine> Input::parseCoordFile(string fileName)
 
 }
 
+nodeFileLine Input::parseNodeLine(string line){
+    nodeFileLine nodeLine;
+    
+    // we know that the first 4 chars are always of the error nibble.
+    nodeLine.errorNibble = stoi(line.substr(0,4));
+
+    // starting from the 5th charachter, everything that follows is the payload.
+    nodeLine.payLoad = line.substr(5);
+
+    // done.
+    return nodeLine;
+
+}
+
+vector<nodeFileLine> Input::parseNodeFile(string fileName)
+{
+    // reads the file line by line
+    // and parses the line into a struct
+    // then pushes the struct into a vector
+
+    vector<nodeFileLine> nodeFile;
+    ifstream nodeFileStream(fileName);
+    string line;
+    while (getline(nodeFileStream, line))
+    {
+        if(line.empty())
+        {
+            break;
+        }
+        nodeFile.push_back(parseNodeLine(line));
+    }
+    return nodeFile;
+
+}
+
 Input::~Input()
 {
     // TODO Auto-generated destructor stub

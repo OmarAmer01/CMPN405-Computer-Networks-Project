@@ -25,10 +25,32 @@ void Node::initialize()
 
 void Node::handleMessage(cMessage *msg)
 {
-    CtrlMsg_Base *ctrlMsg = check_and_cast<CtrlMsg_Base *>(msg);
-    EV << "Name: " << ctrlMsg->getName() << endl
-       << "ID: " << ctrlMsg->getNodeId() << endl
-       << "fileName: " << ctrlMsg->getFName() << endl
-       << "Starter: " << ctrlMsg->getStart() << endl
-       << "StartTime: " << ctrlMsg->getStartTime() << endl;
+
+    if (msg->isSelfMessage())
+    {
+        EV << "Start Time Now.";
+    }
+    else if (check_and_cast<CtrlMsg_Base *>(msg))
+    {
+
+        CtrlMsg_Base *ctrlMsg = check_and_cast<CtrlMsg_Base *>(msg);
+
+        // EV << "Name: " << ctrlMsg->getName() << endl
+        //    << "ID: " << ctrlMsg->getNodeId() << endl
+        //    << "fileName: " << ctrlMsg->getFName() << endl
+        //    << "Starter: " << ctrlMsg->getStart() << endl
+        //    << "StartTime: " << ctrlMsg->getStartTime() << endl;
+
+        ctrlMsg->setName("selfCtrlMsg");
+        if (!ctrlMsg->getStart())
+        {
+            return;
+        }
+
+        if (!nodeFileRead)
+        {
+            scheduleAt(ctrlMsg->getStartTime() + simTime(), ctrlMsg);
+            nodeFileRead = true;
+        }
+    }
 }
