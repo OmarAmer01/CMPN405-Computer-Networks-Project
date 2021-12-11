@@ -14,19 +14,28 @@
 //
 
 #include "coordinator.h"
-#include "Crc.h"
-#include <bitset>
+#include "Input.h"
 
 Define_Module(Coordinator);
 
 void Coordinator::initialize()
 {
-    Crc *crc = new Crc();
-    string testStr = "The Quick Brown Fox Jumps Over the Lazy Dog.";
-    cout << crc->crc8(testStr);
+    Input *input = new Input();
+    this->coordFileVector = input->parseCoordFile("coordinator.txt");
+    printCoordData();
+}
+
+void Coordinator::printCoordData(){
+    for (int idx = 0; idx < coordFileVector.size(); idx++){
+        coordFileLine line = coordFileVector[idx];
+        cout << "NODE ID: " << line.nodeId << endl
+             << "NODE NAME: " << line.fName << endl
+             << "STARTER?: " << line.start << endl
+             << "NODE START: " << line.startTime << endl;
+
+    }
 }
 
 void Coordinator::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
 }
