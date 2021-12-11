@@ -15,15 +15,20 @@
 
 #include "node.h"
 #include "Input.h"
+#include "ctrlMsg_m.h"
 
 Define_Module(Node);
 
 void Node::initialize()
 {
-
 }
 
 void Node::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    CtrlMsg_Base *ctrlMsg = check_and_cast<CtrlMsg_Base *>(msg);
+    EV << "Name: " << ctrlMsg->getName() << endl
+       << "ID: " << ctrlMsg->getNodeId() << endl
+       << "fileName: " << ctrlMsg->getFName() << endl
+       << "Starter: " << ctrlMsg->getStart() << endl
+       << "StartTime: " << ctrlMsg->getStartTime() << endl;
 }

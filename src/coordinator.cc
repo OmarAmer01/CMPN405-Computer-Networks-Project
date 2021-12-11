@@ -20,19 +20,44 @@ Define_Module(Coordinator);
 
 void Coordinator::initialize()
 {
+    // Read file from coordinator.txt
     Input *input = new Input();
     this->coordFileVector = input->parseCoordFile("coordinator.txt");
-    printCoordData();
+
+    // Send the data to the other nodes.
+    sendCtrlMsg2All();
 }
 
-void Coordinator::printCoordData(){
-    for (int idx = 0; idx < coordFileVector.size(); idx++){
+void Coordinator::printCoordData()
+{
+    for (int idx = 0; idx < coordFileVector.size(); idx++)
+    {
         coordFileLine line = coordFileVector[idx];
         cout << "NODE ID: " << line.nodeId << endl
              << "NODE NAME: " << line.fName << endl
              << "STARTER?: " << line.start << endl
              << "NODE START: " << line.startTime << endl;
+    }
+}
 
+CtrlMsg_Base* Coordinator::coordLine2ctrlMsg(coordFileLine line)
+{
+    CtrlMsg_Base* msg = new CtrlMsg_Base("genericControlMessage");
+    msg->setNodeId(line.nodeId);
+    msg->setFName(line.fName.c_str());
+    msg->setStart(line.start);
+    msg->setStartTime(line.startTime);
+    return msg;
+}
+
+void Coordinator::sendCtrlMsg2All()
+{
+    for (int idx = 0; idx < coordFileVector.size(); idx++)
+    {
+        CtrlMsg_Base* msg = coordLine2ctrlMsg(coordFileVector[idx]);
+        std::string out = "out";
+        std::string gate = out + std::to_string(msg->getNodeId());
+        send(msg, gate.c_str());
     }
 }
 

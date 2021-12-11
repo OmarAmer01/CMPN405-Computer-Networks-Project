@@ -16,9 +16,13 @@
 //
 // TODO generated message class
 //
-message CustomMsg {
-    int someField;
-    string anotherField;
-    double arrayField1[];
-    double arrayField2[10];
+
+
+packet CtrlMsg {
+    @customize(true);  // see the generated C++ header for more info
+    int nodeId;
+    string fName;
+    bool start;
+    int startTime;
+    
 }

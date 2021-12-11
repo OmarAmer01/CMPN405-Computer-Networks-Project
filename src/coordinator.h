@@ -17,8 +17,10 @@
 #define __MAINPROJECT_COORDINATOR_H_
 
 #include <omnetpp.h>
-#include "Input.h"
 #include <vector>
+#include "Input.h"
+#include "ctrlMsg_m.h"
+
 using namespace omnetpp;
 
 /**
@@ -33,6 +35,8 @@ protected:
 public:
   void printCoordData();
   vector<coordFileLine> coordFileVector;
+  CtrlMsg_Base* coordLine2ctrlMsg(coordFileLine);
+  void sendCtrlMsg2All();
 };
 
 #endif
