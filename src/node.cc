@@ -107,7 +107,7 @@ void Node::handleMessage(cMessage *msg)
                 nodeFileRead = true;
             }
             output = new Input();
-            output->openLogFile(nodeId, othernodeID);
+            output->openLogFile(nodeId);
             return;
         }
     }
@@ -151,15 +151,15 @@ void Node::handleMessage(cMessage *msg)
             // This error nibble is arranged as follows, with a one meaning that the error will be applied
             // [Modification, Loss, Duplication, Delay]
 
-            bool singleBitMod = errorBits[0];
-            bool packetLoss = errorBits[1];
-            bool packetDup = errorBits[2];
-            bool packetDelay = errorBits[3];
+            char singleBitMod = errorBits[0];
+            char packetLoss = errorBits[1];
+            char packetDup = errorBits[2];
+            char packetDelay = errorBits[3];
 
-            EV << "singleBitMod: " << singleBitMod << endl;
-            EV << "packetLoss: " << packetLoss << endl;
-            EV << "packetDup: " << packetDup << endl;
-            EV << "packetDelay: " << packetDelay << endl;
+            // EV << "singleBitMod: " << singleBitMod << endl;
+            // EV << "packetLoss: " << packetLoss << endl;
+            // EV << "packetDup: " << packetDup << endl;
+            // EV << "packetDelay: " << packetDelay << endl;
 
             EV << "payload: " << payload << endl;
 
@@ -167,44 +167,8 @@ void Node::handleMessage(cMessage *msg)
             /// TODO: Loss Error
             /// FIXME: delay error ==> only the first message gets delayed
             /// FIXME: error bits dont get assigned correctly, y3ny msln adeelo 0100 y3ml 7aga tanya, etc
-            
 
             //calculate the CRC for the msg
-
-            Crc *crcObj = new Crc();
-            string CRC = "CRCBYTE";
-
-            unsigned int CRCInt = crcObj->crc8Alt(payload);
-
-            // convert the CRCint to string
-            stringstream ss;
-            ss << CRCInt;
-            CRC = ss.str();
-
-            if (singleBitMod)
-            {
-
-                EV << "CHNAGE BIT ERROR" << endl;
-                EV << "payload before error:" << payload << endl;
-
-                // generate a random integer between 0 and payload length (select random character)
-                int randomIndex = rand() % payload.length();
-
-                // choose a random number as the bit index for the randomly chosen charachter
-                int randomBitIndex = rand() % 8;
-
-                // flip the bit at that index to a random bit
-                payload[randomIndex] = payload[randomIndex] ^ (1 << randomBitIndex);
-
-                /// TODO: Output that this message was modified
-
-                EV << "Payload after modification:" << payload << endl;
-            }
-
-            if (packetDup)
-            {
-                EV << "PACKET DUPLICATION ERROR" << endl;
-            }
 
             //frame and send the msg
             DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
@@ -212,6 +176,7 @@ void Node::handleMessage(cMessage *msg)
             // we need to frame the payload before sending it
             int size = payload.size();
             int add = 0;
+
             for (int i = 0; i < size; i++)
             {
                 if (payload[i] == '$' || payload[i] == '/')
@@ -225,54 +190,91 @@ void Node::handleMessage(cMessage *msg)
                     i++;
                 }
             }
-
             payload = "$" + payload + "$";
+            Crc *crcObj = new Crc();
+            string CRC = "CRCBYTE";
+
+            unsigned int CRCInt = crcObj->crc8Alt(payload);
+
+            // convert the CRCint to string
+            stringstream ss;
+            ss << CRCInt;
+            CRC = ss.str();
+
+            if (singleBitMod == '1')
+            {
+
+                EV << "CHNAGE BIT ERROR" << endl;
+                EV << "payload before error:" << payload << endl;
+
+                // generate a random integer between 1 and payload length-1 (select random character)
+                /// TODO: check if this is correct
+                int randomIndex = rand() + 1 % payload.length() - 1;
+
+                // choose a random number as the bit index for the randomly chosen charachter
+                int randomBitIndex = rand() % 8;
+
+                // flip the bit at that index to a random bit
+                payload[randomIndex] = payload[randomIndex] ^ (1 << randomBitIndex);
+
+                /// TODO: Output that this message was modified
+
+                EV << "Payload after modification:" << payload << endl;
+            }
+
+            if (packetDup == '1')
+            {
+                EV << "PACKET DUPLICATION ERROR" << endl;
+            }
 
             sendMsg->setM_Payload(payload.c_str());
             sendMsg->setMycheckbits(CRC.c_str());
             sendMsg->setSendingTime(simTime().dbl());
 
             //send(sendMsg, "dataOut");
-            if (packetLoss)
+            output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
+                                sendMsg->getM_Payload(), sendMsg->getSendingTime(), errorBits, 1);
+            if (id == total_num_msg - 1)
             {
-                // Losing the packet means that we will deadlock-wait for an ack/nack.
-                // So, we will send the message again after a random time.
-                // This is a hack, but it works.
-
-                //get random double
-                int randTime = rand() % 3; 
-                sendDelayed(sendMsg, randTime, "dataOut");
-                EV << "PACKET LOSS ERROR" << endl;
-            }
-            if (packetDelay) // if the error nibble has the delay error
-            {
-                // reads the parameter from the node.ned file
-                // and sets the delay time
-                double delayTime = par("delayPeriod").doubleValue();
-                EV << "PACKET DELAY ERROR WITH DELAY = " << delayTime << endl;
-
-                // send the message with a delay
-                EV << "ERROR HERE" << endl;
-                sendDelayed(sendMsg, delayTime, "dataOut");
+                output->WriteFinishLine(nodeId, true);
+                output->WriteStatsLine(nodeId, simTime().dbl(), id + 1 + duplicates, 1.333);
             }
             else
             {
+                //send the next message
+                if (packetLoss == '1')
+                {
+                    // Losing the packet means that we will deadlock-wait for an ack/nack.
+                    // So, we will send the message again after a random time.
+                    // This is a hack, but it works.
+                    /// FIXME: remove the sendDelayed and turn it into a flag instead
+                    //get random double
+                    int randTime = rand() % 3;
+                    sendDelayed(sendMsg, randTime, "dataOut");
+                    EV << "PACKET LOSS ERROR" << endl;
+                }
+                if (packetDelay == '1') // if the error nibble has the delay error
+                {
+                    // reads the parameter from the node.ned file
+                    // and sets the delay time
+                    double delayTime = par("delayPeriod").doubleValue();
+                    EV << "PACKET DELAY ERROR WITH DELAY = " << delayTime << endl;
 
-                send(sendMsg, "dataOut");
+                    // send the message with a delay
+                    EV << "ERROR HERE" << endl;
+                    sendDelayed(sendMsg, delayTime, "dataOut");
+                }
+                else
+                {
+
+                    send(sendMsg, "dataOut");
+                }
             }
+            // EV << "sent message with id " << sendMsg->getSeq_Num() << endl
+            //  << " and content of" << sendMsg->getM_Payload() << endl;
 
-            EV << "sent message with id " << sendMsg->getSeq_Num() << endl
-               << " and content of" << sendMsg->getM_Payload() << endl;
-            output->WriteToFile(nodeId, othernodeID, true, sendMsg->getSeq_Num(),
-                                sendMsg->getM_Payload(), sendMsg->getSendingTime(), errorBits, 1);
             // if the sender finishes sending data. output file
-            EV << "id" << id << "total lines os msg" << total_num_msg << endl;
-            if (id == total_num_msg - 1)
-            {
-
-                output->WriteFinishLine(nodeId, othernodeID, true);
-                output->WriteStatsLine(nodeId, othernodeID, simTime().dbl(), 10, 1.333);
-            }
+            //EV << "id" << id << "total lines os msg" << total_num_msg << endl;
         }
         else // reciever
         {
@@ -313,10 +315,11 @@ void Node::handleMessage(cMessage *msg)
             }
 
             sendDelayed(dataMsg, 0.2, "dataOut");
-            EV << "Recieved message with id " << dataMsg->getSeq_Num() << endl
-               << " and content of" << dataMsg->getM_Payload() << endl
-               << "With ACK bit " << dataMsg->getPiggy() << endl;
-            output->WriteToFile(othernodeID, nodeId, false, dataMsg->getSeq_Num(), dataMsg->getM_Payload(), simTime().dbl(), "0000", 1);
+            //EV << "Recieved message with id " << dataMsg->getSeq_Num() << endl
+            //   << " and content of" << dataMsg->getM_Payload() << endl
+            //   << "With ACK bit " << dataMsg->getPiggy() << endl;
+
+            output->WriteToFile(nodeId, false, dataMsg->getSeq_Num(), dataMsg->getM_Payload(), simTime().dbl(), "0000", 1);
         }
     }
 }

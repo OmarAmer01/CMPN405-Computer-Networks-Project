@@ -34,6 +34,7 @@ protected:
   virtual void handleMessage(cMessage *msg);
   Input *output;
 public:
+  int duplicates=0;
   bool nodeFileRead = false;
   //int nodeStartingTime=-1;
   bool isStartingNode =false;

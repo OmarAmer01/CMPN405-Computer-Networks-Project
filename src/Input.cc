@@ -1,7 +1,7 @@
 
 #include "Input.h"
 #include <iostream>
-#include<fstream>
+#include <fstream>
 #include <string>
 Input::Input()
 {
@@ -19,10 +19,10 @@ coordFileLine Input::parseCoordLine(string line)
     coordFileLine coordLine;
 
     // we also know for sure that the first charachter is the node id.
-    if (line[0]=='0')
+    if (line[0] == '0')
         coordLine.nodeId = 0;
     else
-        coordLine.nodeId = line[0]-'0';
+        coordLine.nodeId = line[0] - '0';
     // skip a space, then we have the input file name.
     int i = 2;
     while (line[i] != ' ')
@@ -75,28 +75,27 @@ vector<coordFileLine> Input::parseCoordFile(string fileName)
     string line;
     while (getline(coordFileStream, line))
     {
-        if(line.empty())
+        if (line.empty())
         {
             break;
         }
         coordFile.push_back(parseCoordLine(line));
     }
     return coordFile;
-
 }
 
-nodeFileLine Input::parseNodeLine(string line){
+nodeFileLine Input::parseNodeLine(string line)
+{
     nodeFileLine nodeLine;
-    
+
     // we know that the first 4 chars are always of the error nibble.
-    nodeLine.errorNibble = stoi(line.substr(0,3));
+    nodeLine.errorNibble = stoi(line.substr(0, 3));
 
     // starting from the 5th charachter, everything that follows is the payload.
     nodeLine.payLoad = line.substr(5);
 
     // done.
     return nodeLine;
-
 }
 
 vector<nodeFileLine> Input::parseNodeFile(string fileName)
@@ -110,41 +109,61 @@ vector<nodeFileLine> Input::parseNodeFile(string fileName)
     string line;
     while (getline(nodeFileStream, line))
     {
-        if(line.empty())
+        if (line.empty())
         {
             break;
         }
         nodeFile.push_back(parseNodeLine(line));
     }
     return nodeFile;
-
 }
 
-
-void Input::openLogFile(int senderID, int receiverID)
+void Input::openLogFile(int nodeID)
 {
     fstream my_file;
-    string sender = to_string(senderID);
-    string receiver = to_string(receiverID);
-    string FileName = "pair"+sender+receiver+".txt";
+    string sender;
+    string receiver;
+    if (nodeID % 2 == 0)
+    {
+        sender = to_string(nodeID);
+        receiver = to_string(nodeID + 1);
+    }
+    else
+    {
+        sender = to_string(nodeID-1);
+        receiver = to_string(nodeID);
+    }
+    string FileName = "pair" + sender + receiver + ".txt";
 
     my_file.open(FileName, ios::out);
-    if (!my_file) {
+    if (!my_file)
+    {
         cout << "File not created!";
     }
-    else {
+    else
+    {
         cout << "File created successfully!";
     }
 }
 
-void Input::WriteToFile(int senderID,int receiverID,bool isSender ,int msgID,string msg,double time ,string e, int ack)
+void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double time, string e, int ack)
 {
     //otherNode ID might be used
     fstream my_file;
-    string sender = to_string(senderID);
-    string receiver = to_string(receiverID);
+    string sender;
+    string receiver;
+    if (nodeID % 2 == 0)
+    {
+        sender = to_string(nodeID);
+        receiver = to_string(nodeID + 1);
+    }
+    else
+    {
+        sender = to_string(nodeID-1);
+        receiver = to_string(nodeID);
+    }
     string FileName = "pair" + sender + receiver + ".txt";
-    my_file.open(FileName,  std::ios::app);
+    my_file.open(FileName, std::ios::app);
     string sendorNOT;
     string error;
     string mod = "";
@@ -154,65 +173,95 @@ void Input::WriteToFile(int senderID,int receiverID,bool isSender ,int msgID,str
     if (e[0] == 1)
         mod = "modification,";
     if (e[1] == 1)
-        dup = " duplicated,";
+        dup = " loss,";
     if (e[2] == 1)
-        delay = " delay,";
+        delay = " duplicated,";
     if (e[3] == 1)
-        loss = " loss,";
-    error = mod + dup + delay + loss;
+        loss = " delay,";
+    error = mod + loss + dup + delay;
 
-    int nodeID;
+    //int nodeID;
     if (isSender)
     {
         sendorNOT = "sends";
-        nodeID = senderID;
+       // nodeID = senderID;
     }
     else
     {
         sendorNOT = "received";
-        nodeID = receiverID;
+     //   nodeID = receiverID;
     }
     my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
-    << " and content= " << msg << " at " << time << " with " << error
-    << " and piggybacking Ack number " << ack<<endl;
+            << " and content= " << msg << " at " << time << " with " << error
+            << " and piggybacking Ack number " << ack << endl;
     my_file.close();
 }
 
 // print error message (timeout , drop)
 // print finish msg
-void Input::WriteFinishLine(int senderID, int receiverID, bool isSender)
+void Input::WriteFinishLine(int nodeID, bool isSender)
 {
     fstream my_file;
-    string sender = to_string(senderID);
-    string receiver = to_string(receiverID);
+    string sender;
+    string receiver;
+    if (nodeID % 2 == 0)
+    {
+        sender = to_string(nodeID);
+        receiver = to_string(nodeID + 1);
+    }
+    else
+    {
+        sender = to_string(nodeID-1);
+        receiver = to_string(nodeID);
+    }
     string FileName = "pair" + sender + receiver + ".txt";
     my_file.open(FileName, std::ios::app);
     if (isSender)
-        my_file << "node"<< senderID <<" end of input file" << endl;
+        my_file << "node" << nodeID << " end of input file" << endl;
     else
-        my_file << "node" << receiverID << " end of input file" << endl;
+        my_file << "node" << nodeID << " end of input file" << endl;
     my_file.close();
 }
 // print stats
-void Input::WriteStatsLine(int senderID, int receiverID, double totalTime , int totalTranNum , double throuput)
+void Input::WriteStatsLine(int nodeID, double totalTime, int totalTranNum, double throuput)
 {
     fstream my_file;
-    string sender = to_string(senderID);
-    string receiver = to_string(receiverID);
+    string sender;
+    string receiver;
+    if (nodeID % 2 == 0)
+    {
+        sender = to_string(nodeID);
+        receiver = to_string(nodeID + 1);
+    }
+    else
+    {
+        sender = to_string(nodeID-1);
+        receiver = to_string(nodeID);
+    }
     string FileName = "pair" + sender + receiver + ".txt";
-    my_file.open(FileName,  std::ios::app);
-    my_file<< "------------------------------------------------------"<<endl;
-    my_file<< "total transmission time= " << totalTime << endl
-    << "total number of transmissions= " << totalTranNum << endl
-    << "the network throughput=" << throuput << endl;
+    my_file.open(FileName, std::ios::app);
+    my_file << "------------------------------------------------------" << endl;
+    my_file << "total transmission time= " << totalTime << endl
+            << "total number of transmissions= " << totalTranNum << endl
+            << "the network throughput=" << throuput << endl;
     my_file.close();
 }
 
-void Input::closeLogFile(int senderID, int receiverID)
+void Input::closeLogFile(int nodeID)
 {
     fstream my_file;
-    string sender = to_string(senderID);
-    string receiver = to_string(receiverID);
+    string sender;
+    string receiver;
+    if (nodeID % 2 == 0)
+    {
+        sender = to_string(nodeID);
+        receiver = to_string(nodeID + 1);
+    }
+    else
+    {
+        sender = to_string(nodeID-1);
+        receiver = to_string(nodeID);
+    }
     string FileName = "pair" + sender + receiver + ".txt";
     my_file.close();
 }

@@ -27,11 +27,11 @@ public:
     virtual ~Input();
     vector<coordFileLine> parseCoordFile(string fileName); // returns a vector of parsed lines as structs.
     vector<nodeFileLine> parseNodeFile(string fileName);   // returns a vector of parsed lines as structs.
-    void openLogFile(int senderID, int receiverID);
-    void WriteToFile(int nodeID,  int otherNodeID,bool isSender, int msgID, string msg, double time, string errors, int ack);
-    void WriteStatsLine(int senderID, int receiverID, double totalTime, int totalTranNum, double throuput);
-    void WriteFinishLine(int senderID, int receiverID , bool isSender);
-    void closeLogFile(int senderID, int receiverID);
+    void openLogFile(int senderID);
+    void WriteToFile(int nodeID,bool isSender, int msgID, string msg, double time, string errors, int ack);
+    void WriteStatsLine(int senderID, double totalTime, int totalTranNum, double throuput);
+    void WriteFinishLine(int senderID,  bool isSender);
+    void closeLogFile(int senderID);
     string fname;
 
 private:

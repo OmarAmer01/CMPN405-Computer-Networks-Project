@@ -1,0 +1,4 @@
+- node1 sends message with id=0 and content= $The violin, sometimes known as a fiddle$ at 6 with  and piggybacking Ack number 1
+- node0 received message with id=0 and content= $The violin, sometimes known as a fiddle$ at 6 with  and piggybacking Ack number 1
+- node1 sends message with id=1 and content= $is a wooden chordophone (string instrument)$ at 6.2 with  and piggybacking Ack number 1
+- node0 received message with id=1 and content= $is a wooden chordophone (string instrument)$ at 6.2 with  and piggybacking Ack number 1
