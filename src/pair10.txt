@@ -1,10 +1,11 @@
-- node1 sends message with id=0 and content= $The violin, sometimes known as a fiddle$ at 6 with  and piggybacking Ack number 1
-- node0 received message with id=0 and content= $The violin, sometimes known as a fiddle$ at 6 with  and piggybacking Ack number 1
-- node1 sends message with id=1 and content= $is a wooden chordophone (string instrument)$ at 6.2 with modification, and piggybacking Ack number 1
-- node0 received message with id=1 and content= $is a wooden chordophone (string instrument)$ at 6.2 with  and piggybacking Ack number 1
-- node1 sends message with id=2 and content= $in the violin family.$ at 6.4 with  and piggybacking Ack number 1
+- node1 sends message with id=0 and content= $The violin, sometime{ known as a fiddle$ at 6 with  and piggybacking Ack number 1
+- node0 received message with id=0 and content= $The violin, sometime{ known as a fiddle$ at 6 with  and piggybacking Ack number 1
+- node1 sends message with id=1 and content= $is a wooden shordophone (string instrument)$ at 6.2 with  and piggybacking Ack number 1
+- node0 received message with id=1 and content= $is a wooden shordophone (string instrument)$ at 6.2 with  and piggybacking Ack number 1
+- node1 sends message with id=2 and content= $in the violin familù$ at 6.4 with  and piggybacking Ack number 1
 node1 end of input file
+------------------------------------------------------
 total transmission time= 6.4
 total number of transmissions= 10
 the network throughput=1.333
-- node0 received message with id=2 and content= $in the violin family.$ at 6.4 with  and piggybacking Ack number 1
+- node0 received message with id=2 and content= $in the violin familù$ at 6.4 with  and piggybacking Ack number 1

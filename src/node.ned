@@ -20,6 +20,8 @@ package mainproject;
 //
 simple Node
 {
+    parameters:
+        double delayPeriod;
     gates:
         output dataOut;
         input dataIn;

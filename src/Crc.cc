@@ -42,6 +42,7 @@ string Crc::str2Num(string str, int base = 2)
 
 unsigned int Crc::crc8(string str)
 {
+    return 0b11111111;
     // This function calculates the CRC8 of the given String.
 
     /*
@@ -100,4 +101,23 @@ unsigned int Crc::crc8(string str)
 Crc::~Crc()
 {
     // TODO Auto-generated destructor stub
+}
+
+unsigned int Crc::crc8Alt(string str){
+    // This function calculates the CRC8 of the given String.
+    unsigned int crc = 0;
+    for(int i = 0; i < str.length(); i++){
+        crc ^= str[i];
+        for(int j = 0; j < 8; j++){
+            if(crc & 1){
+                crc = (crc >> 1) ^ 0x8C;
+            }
+            else{
+                crc = crc >> 1;
+            }
+        }
+    }
+
+    return crc;
+    
 }
