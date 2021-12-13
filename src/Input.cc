@@ -130,7 +130,7 @@ void Input::openLogFile(int nodeID)
     }
     else
     {
-        sender = to_string(nodeID-1);
+        sender = to_string(nodeID - 1);
         receiver = to_string(nodeID);
     }
     string FileName = "pair" + sender + receiver + ".txt";
@@ -159,7 +159,7 @@ void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double
     }
     else
     {
-        sender = to_string(nodeID-1);
+        sender = to_string(nodeID - 1);
         receiver = to_string(nodeID);
     }
     string FileName = "pair" + sender + receiver + ".txt";
@@ -170,13 +170,13 @@ void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double
     string dup = "";
     string delay = "";
     string loss = "";
-    if (e[0] == 1)
+    if (e[0] == '1')
         mod = "modification,";
-    if (e[1] == 1)
+    if (e[1] == '1')
         dup = " loss,";
-    if (e[2] == 1)
+    if (e[2] == '1')
         delay = " duplicated,";
-    if (e[3] == 1)
+    if (e[3] == '1')
         loss = " delay,";
     error = mod + loss + dup + delay;
 
@@ -184,12 +184,12 @@ void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double
     if (isSender)
     {
         sendorNOT = "sends";
-       // nodeID = senderID;
+        // nodeID = senderID;
     }
     else
     {
         sendorNOT = "received";
-     //   nodeID = receiverID;
+        //   nodeID = receiverID;
     }
     my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
             << " and content= " << msg << " at " << time << " with " << error
@@ -211,7 +211,7 @@ void Input::WriteFinishLine(int nodeID, bool isSender)
     }
     else
     {
-        sender = to_string(nodeID-1);
+        sender = to_string(nodeID - 1);
         receiver = to_string(nodeID);
     }
     string FileName = "pair" + sender + receiver + ".txt";
@@ -235,7 +235,7 @@ void Input::WriteStatsLine(int nodeID, double totalTime, int totalTranNum, doubl
     }
     else
     {
-        sender = to_string(nodeID-1);
+        sender = to_string(nodeID - 1);
         receiver = to_string(nodeID);
     }
     string FileName = "pair" + sender + receiver + ".txt";
@@ -259,7 +259,7 @@ void Input::closeLogFile(int nodeID)
     }
     else
     {
-        sender = to_string(nodeID-1);
+        sender = to_string(nodeID - 1);
         receiver = to_string(nodeID);
     }
     string FileName = "pair" + sender + receiver + ".txt";

@@ -1,3 +1,8 @@
-1000 The violin, sometimes known as a fiddle
-1000 is a wooden chordophone (string instrument)
-1000 in the violin family
+0010 1st msg
+0011 2nd msg
+1010 3msg
+1010 4msg
+1011 5msg
+0001 6msg
+0000 This packet doesnt have any errors.
+

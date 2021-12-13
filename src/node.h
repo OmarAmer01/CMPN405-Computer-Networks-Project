@@ -33,18 +33,19 @@ protected:
   virtual void initialize();
   virtual void handleMessage(cMessage *msg);
   Input *output;
+
 public:
-  int duplicates=0;
+  int duplicates = 0;
   bool nodeFileRead = false;
   //int nodeStartingTime=-1;
-  bool isStartingNode =false;
-  double totalTrans_Time=0.0;
-  int totalNumberOfTrans=0;
-  int id=-1;  //message ID
-  int nodeId=0;
-  int othernodeID=0;
+  bool isStartingNode = false;
+  double totalTrans_Time = 0.0;
+  int totalNumberOfTrans = 0;
+  int id = -1; //message ID
+  int nodeId = 0;
+  int othernodeID = 0;
+  int prevMessageSeqNum = -1;
   vector<nodeFileLine> nodeFileVector;
-
 };
 
 #endif

@@ -13,6 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
+/// FIXME: last message doesnt send. 
+
+/// TODO: Remove the pair01.txt when we start the simulation.
+/// TODO: Add piggyback ID to the output and correct acknowledge number .
+/// TODO: Increment the duplicates counter.
+/// TODO: add the timeout to the output file
+
 #include "node.h"
 #include "Input.h"
 #include "ctrlMsg_m.h"
@@ -161,11 +168,6 @@ void Node::handleMessage(cMessage *msg)
             EV << "packetDup: " << packetDup << endl;
             EV << "packetDelay: " << packetDelay << endl;
 
-            /// TODO: Dup Error
-            /// TODO: Loss Error
-            /// FIXME: delay error ==> only the first message gets delayed
-            /// FIXME: error bits dont get assigned correctly, y3ny msln adeelo 0100 y3ml 7aga tanya, etc
-
             //frame and send the msg
             DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
             sendMsg->setSeq_Num(id);
@@ -204,7 +206,6 @@ void Node::handleMessage(cMessage *msg)
                 EV << "payload before error:" << payload << endl;
 
                 // generate a random integer between 1 and payload length-1 (select random character)
-                /// TODO: check if this is correct
                 int randomIndex = intuniform(1, size - 1);
 
                 // choose a random number as the bit index for the randomly chosen charachter
@@ -213,7 +214,7 @@ void Node::handleMessage(cMessage *msg)
                 // flip the bit at that index to a random bit
                 payload[randomIndex] = payload[randomIndex] ^ (1 << randomBitIndex);
 
-                /// TODO: Output that this message was modified
+
 
                 EV << "Payload after modification:" << payload << endl;
             }
@@ -237,43 +238,71 @@ void Node::handleMessage(cMessage *msg)
             }
             else
             {
-                //send the next message
 
-                if (packetDelay == '1') // if the error nibble has the delay error
-                {
-                    // reads the parameter from the node.ned file
-                    // and sets the delay time
-                    double delayTime = par("delayPeriod").doubleValue();
-                    EV << "PACKET DELAY ERROR WITH DELAY = " << delayTime << endl;
+                // Precedence
+                // 1.MOD
+                // 2.DUP
+                // 3.DELAY
+                // 4.LOSS
 
-                    // send the message with a delay
-                    EV << "ERROR HERE" << endl;
-                    sendDelayed(sendMsg, delayTime, "dataOut");
+                string errorBitsWOmod = errorBits.substr(1, 3);
+
+                if (errorBitsWOmod == "000")
+                {                             // No Error
+                    send(sendMsg, "dataOut"); // Send the message normally
                 }
+                else if (errorBitsWOmod == "001")
+                {                                                                      // Delay Only
+                    sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut"); // Send the message after the delay specified in the .ini file
+                }
+                else if (errorBitsWOmod == "010")
+                {                                                 // Dup only
+                    send(sendMsg, "dataOut");                     // Send the message
+                    sendDelayed(sendMsg->dup(), 0.01, "dataOut"); // and its duplicate after a small delay
+                }
+                else if (errorBitsWOmod == "011")
+                { // Dup & Delay
 
-                if (packetLoss == '1')
-                {
+                    sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut");               // Send the message after the delay specified in the .ini file
+                    sendDelayed(sendMsg->dup(), par("delayPeriod").doubleValue() + 0.01, "dataOut"); // and its duplicate after a small delay
+                }
+                else if (errorBitsWOmod == "100")
+                { // Loss Only
+                    /// TODO: use a timer to break the deadlock instead.
+                    // If the packet is lost
                     // Losing the packet means that we will deadlock-wait for an ack/nack.
-                    // So, we will send the message again after a random time.
+                    // So, we will send the message again after 10 secs. this number is arbitrarly chosen.
                     // This is a hack, but it works.
-                    /// FIXME: remove the sendDelayed and turn it into a flag instead
 
-                    //get random double
-                    int randTime = rand() % 3;
-                    sendDelayed(sendMsg, randTime, "dataOut");
-                    EV << "PACKET LOSS ERROR" << endl;
+                    //sendDelayed(sendMsg, 10, "dataOut");
                 }
-                else
-                {
+                else if (errorBitsWOmod == "101")
+                { // Loss & Delay
+                    /// TODO: use a timer to break the deadlock instead.
+                    // TODO: CALCULATE THE TIME OF THE DELAY
 
-                    send(sendMsg, "dataOut");
+                    //sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut");
+                }
+                else if (errorBitsWOmod == "110")
+                { // Loss & Dup
+                    /// TODO: use a timer to break the deadlock instead.
+                    // TODO: CALCULATE THE TIME OF THE DUPLICATE
+
+                    //send(sendMsg, "dataOut");
+                    //sendDelayed(sendMsg->dup(), 0.01, "dataOut");
+
+                    // TODO: CALCULATE THE TIME OF THE DUPLICATE
+                }
+                else if (errorBitsWOmod == "111")
+                { // Loss & Dup & Delay
+                    /// TODO: use a timer to break the deadlock instead.
+                    // TODO: CALCULATE THE TIME OF THE DUPLICATE
+                    // TODO: CALCULATE THE TIME OF THE DELAY
+
+                    sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut");               // Send the message after the delay specified in the .ini file
+                    sendDelayed(sendMsg->dup(), par("delayPeriod").doubleValue() + 0.01, "dataOut"); // and its duplicate after a small delay
                 }
             }
-            // EV << "sent message with id " << sendMsg->getSeq_Num() << endl
-            //  << " and content of" << sendMsg->getM_Payload() << endl;
-
-            // if the sender finishes sending data. output file
-            //EV << "id" << id << "total lines os msg" << total_num_msg << endl;
         }
         else // reciever
         {
@@ -286,10 +315,9 @@ void Node::handleMessage(cMessage *msg)
             // if it is duplicated, then we will send an NACK
             // if it is not duplicated, then we will send an ACK
 
+            char bitModded = '0';
+            char packetDup = '0';
 
-            // Check duplicate:
-            
-        
             // Here we calculate the CRC8 of the message
             int reCalcCrc8 = 0;
 
@@ -304,8 +332,6 @@ void Node::handleMessage(cMessage *msg)
             ss << reCalcCrc8;
             string reCalcCrc8Str = ss.str();
 
-            
-
             //increase the # of trans and trnastime
 
             std::string out = "out";
@@ -317,19 +343,43 @@ void Node::handleMessage(cMessage *msg)
             if (reCalcCrc8Str == CRC)
             {
                 // send the ACK
+                // Because there is no modification
                 dataMsg->setPiggy(1);
+                bitModded = '0';
             }
             else
             {
+                // There was atleast one bit error.
+    
+                bitModded = '1';
                 dataMsg->setPiggy(0);
             }
 
-            sendDelayed(dataMsg, 0.2, "dataOut");
-            //EV << "Recieved message with id " << dataMsg->getSeq_Num() << endl
-            //   << " and content of" << dataMsg->getM_Payload() << endl
-            //   << "With ACK bit " << dataMsg->getPiggy() << endl;
+            if (prevMessageSeqNum == dataMsg->getSeq_Num())
+            {
+                // The message is duplicated
+                // send the NACK
+                dataMsg->setPiggy(0);
+                packetDup = '1';
 
-            output->WriteToFile(nodeId, false, dataMsg->getSeq_Num(), dataMsg->getM_Payload(), simTime().dbl(), "0000", 1);
+                /// TODO: PRINT RECIEVER DROPS THE MESSAGE, WHEN WE SEND THE DUPLICATES
+            } 
+            
+            else
+            {
+                // The message is not duplicated
+                // send the ACK
+                dataMsg->setPiggy(1);
+                packetDup = '0';
+                sendDelayed(dataMsg, 0.2, "dataOut");
+
+                string errorString = "0000";
+                errorString[0] = bitModded;
+                errorString[2] = packetDup;
+                output->WriteToFile(nodeId, false, dataMsg->getSeq_Num(), dataMsg->getM_Payload(), simTime().dbl(), errorString, dataMsg->getPiggy());
+            }
+
+            prevMessageSeqNum = dataMsg->getSeq_Num(); // in the first time, prevMessageSeqNum = -1, so the first message will be sent with ACK always
         }
     }
 }
