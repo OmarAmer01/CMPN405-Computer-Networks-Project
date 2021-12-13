@@ -89,7 +89,7 @@ nodeFileLine Input::parseNodeLine(string line)
     nodeFileLine nodeLine;
 
     // we know that the first 4 chars are always of the error nibble.
-    nodeLine.errorNibble = stoi(line.substr(0, 3));
+    nodeLine.errorNibble = line.substr(0, 4); // maybe use stoi?
 
     // starting from the 5th charachter, everything that follows is the payload.
     nodeLine.payLoad = line.substr(5);

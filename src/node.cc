@@ -156,19 +156,15 @@ void Node::handleMessage(cMessage *msg)
             char packetDup = errorBits[2];
             char packetDelay = errorBits[3];
 
-            // EV << "singleBitMod: " << singleBitMod << endl;
-            // EV << "packetLoss: " << packetLoss << endl;
-            // EV << "packetDup: " << packetDup << endl;
-            // EV << "packetDelay: " << packetDelay << endl;
-
-            EV << "payload: " << payload << endl;
+            EV << "singleBitMod: " << singleBitMod << endl;
+            EV << "packetLoss: " << packetLoss << endl;
+            EV << "packetDup: " << packetDup << endl;
+            EV << "packetDelay: " << packetDelay << endl;
 
             /// TODO: Dup Error
             /// TODO: Loss Error
             /// FIXME: delay error ==> only the first message gets delayed
             /// FIXME: error bits dont get assigned correctly, y3ny msln adeelo 0100 y3ml 7aga tanya, etc
-
-            //calculate the CRC for the msg
 
             //frame and send the msg
             DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
@@ -209,7 +205,7 @@ void Node::handleMessage(cMessage *msg)
 
                 // generate a random integer between 1 and payload length-1 (select random character)
                 /// TODO: check if this is correct
-                int randomIndex = rand() + 1 % payload.length() - 1;
+                int randomIndex = intuniform(1, size - 1);
 
                 // choose a random number as the bit index for the randomly chosen charachter
                 int randomBitIndex = rand() % 8;
@@ -242,17 +238,7 @@ void Node::handleMessage(cMessage *msg)
             else
             {
                 //send the next message
-                if (packetLoss == '1')
-                {
-                    // Losing the packet means that we will deadlock-wait for an ack/nack.
-                    // So, we will send the message again after a random time.
-                    // This is a hack, but it works.
-                    /// FIXME: remove the sendDelayed and turn it into a flag instead
-                    //get random double
-                    int randTime = rand() % 3;
-                    sendDelayed(sendMsg, randTime, "dataOut");
-                    EV << "PACKET LOSS ERROR" << endl;
-                }
+
                 if (packetDelay == '1') // if the error nibble has the delay error
                 {
                     // reads the parameter from the node.ned file
@@ -263,6 +249,19 @@ void Node::handleMessage(cMessage *msg)
                     // send the message with a delay
                     EV << "ERROR HERE" << endl;
                     sendDelayed(sendMsg, delayTime, "dataOut");
+                }
+
+                if (packetLoss == '1')
+                {
+                    // Losing the packet means that we will deadlock-wait for an ack/nack.
+                    // So, we will send the message again after a random time.
+                    // This is a hack, but it works.
+                    /// FIXME: remove the sendDelayed and turn it into a flag instead
+
+                    //get random double
+                    int randTime = rand() % 3;
+                    sendDelayed(sendMsg, randTime, "dataOut");
+                    EV << "PACKET LOSS ERROR" << endl;
                 }
                 else
                 {
@@ -278,11 +277,20 @@ void Node::handleMessage(cMessage *msg)
         }
         else // reciever
         {
-            // the reciever needs to check whether the recicved message is correct or not,
+            // The reciever needs to check whether the recicved message is correct or not,
             // we do this by reading the message and comparing the CRC
             // if the CRC is correct, then send an ACK
             // if the CRC is not correct, then send a NACK
 
+            // We also need to check whether the message is duplicated or not
+            // if it is duplicated, then we will send an NACK
+            // if it is not duplicated, then we will send an ACK
+
+
+            // Check duplicate:
+            
+        
+            // Here we calculate the CRC8 of the message
             int reCalcCrc8 = 0;
 
             DataMsg_Base *dataMsg = check_and_cast<DataMsg_Base *>(msg);
@@ -295,6 +303,8 @@ void Node::handleMessage(cMessage *msg)
             stringstream ss;
             ss << reCalcCrc8;
             string reCalcCrc8Str = ss.str();
+
+            
 
             //increase the # of trans and trnastime
 
