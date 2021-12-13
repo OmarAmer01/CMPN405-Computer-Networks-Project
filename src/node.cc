@@ -17,6 +17,7 @@
 #include "Input.h"
 #include "ctrlMsg_m.h"
 #include "dataMsg_m.h"
+#include "Crc.h"
 using namespace std;
 Define_Module(Node);
 
@@ -142,6 +143,7 @@ void Node::handleMessage(cMessage *msg)
            string payload =  inputLine.payLoad;
            //calculate the CRC for the msg
            string CRC="0000";//---------------------------should be modified
+
            if (errorBits=="0000")
            {
             //NO error .... send the msg without modifying it
@@ -175,7 +177,12 @@ void Node::handleMessage(cMessage *msg)
 
            send(sendMsg, "dataOut");
            EV<<"sent message with id "<<sendMsg->getSeq_Num()<< " and content of"<<sendMsg->getM_Payload()<<endl;
-           // if the sender finishes sending data.....
+
+           // if the sender finishes sending data. output file
+           if (id==size)
+           {
+
+           }
         }
         else // reciever
         {

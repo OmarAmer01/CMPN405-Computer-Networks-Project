@@ -21,6 +21,7 @@
 #include "Input.h"
 #include "ctrlMsg_m.h"
 #include "dataMsg_m.h"
+#include "Crc.h"
 using namespace omnetpp;
 
 /**
