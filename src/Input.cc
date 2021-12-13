@@ -120,6 +120,102 @@ vector<nodeFileLine> Input::parseNodeFile(string fileName)
 
 }
 
+
+void Input::openLogFile(int senderID, int receiverID)
+{
+    fstream my_file;
+    string sender = to_string(senderID);
+    string receiver = to_string(receiverID);
+    string FileName = "pair"+sender+receiver+".txt";
+
+    my_file.open(FileName, ios::out);
+    if (!my_file) {
+        cout << "File not created!";
+    }
+    else {
+        cout << "File created successfully!";
+    }
+}
+
+void Input::WriteToFile(int senderID,int receiverID,bool isSender ,int msgID,string msg,double time ,string e, int ack)
+{
+    //otherNode ID might be used
+    fstream my_file;
+    string sender = to_string(senderID);
+    string receiver = to_string(receiverID);
+    string FileName = "pair" + sender + receiver + ".txt";
+    my_file.open(FileName,  std::ios::app);
+    string sendorNOT;
+    string error;
+    string mod = "";
+    string dup = "";
+    string delay = "";
+    string loss = "";
+    if (e[0] == 1)
+        mod = "modification,";
+    if (e[1] == 1)
+        dup = " duplicated,";
+    if (e[2] == 1)
+        delay = " delay,";
+    if (e[3] == 1)
+        loss = " loss,";
+    error = mod + dup + delay + loss;
+
+    int nodeID;
+    if (isSender)
+    {
+        sendorNOT = "sends";
+        nodeID = senderID;
+    }
+    else
+    {
+        sendorNOT = "received";
+        nodeID = receiverID;
+    }
+    my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
+    << " and content= " << msg << " at " << time << " with " << error
+    << " and piggybacking Ack number " << ack<<endl;
+    my_file.close();
+}
+
+// print error message (timeout , drop)
+// print finish msg
+void Input::WriteFinishLine(int senderID, int receiverID, bool isSender)
+{
+    fstream my_file;
+    string sender = to_string(senderID);
+    string receiver = to_string(receiverID);
+    string FileName = "pair" + sender + receiver + ".txt";
+    my_file.open(FileName, std::ios::app);
+    if (isSender)
+        my_file << "node"<< senderID <<" end of input file" << endl;
+    else
+        my_file << "node" << receiverID << " end of input file" << endl;
+    my_file.close();
+}
+// print stats
+void Input::WriteStatsLine(int senderID, int receiverID, double totalTime , int totalTranNum , double throuput)
+{
+    fstream my_file;
+    string sender = to_string(senderID);
+    string receiver = to_string(receiverID);
+    string FileName = "pair" + sender + receiver + ".txt";
+    my_file.open(FileName,  std::ios::app);
+    my_file<< "------------------------------------------------------"<<endl;
+    my_file<< "total transmission time= " << totalTime << endl
+    << "total number of transmissions= " << totalTranNum << endl
+    << "the network throughput=" << throuput << endl;
+    my_file.close();
+}
+
+void Input::closeLogFile(int senderID, int receiverID)
+{
+    fstream my_file;
+    string sender = to_string(senderID);
+    string receiver = to_string(receiverID);
+    string FileName = "pair" + sender + receiver + ".txt";
+    my_file.close();
+}
 Input::~Input()
 {
     // TODO Auto-generated destructor stub

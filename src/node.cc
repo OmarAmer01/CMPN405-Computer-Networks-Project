@@ -99,12 +99,13 @@ void Node::handleMessage(cMessage *msg)
             isStartingNode=true;
             EV << "I am the starting node, I read my file"<<endl;
             EV<<"First line:"<<nodeFileVector[0].payLoad;
-
             if (!nodeFileRead)
              {
                  scheduleAt(ctrlMsg->getStartTime() + simTime(), ctrlMsg);
                  nodeFileRead = true;
              }
+            output=new Input();
+            output->openLogFile(nodeId, othernodeID);
             return;
         }
 
@@ -137,6 +138,7 @@ void Node::handleMessage(cMessage *msg)
                }
            }
            nodeFileLine inputLine;
+           int total_num_msg =nodeFileVector.size();
            inputLine =nodeFileVector[id];
            //get all the inf. needed from the inputLine (payload, error bits)
            string errorBits= inputLine.errorNibble;
@@ -171,17 +173,22 @@ void Node::handleMessage(cMessage *msg)
                    i++;
                }
            }
+           payload="$"+payload+"$";
            sendMsg->setM_Payload(payload.c_str());
            sendMsg->setMycheckbits(CRC.c_str());
            sendMsg->setSendingTime(simTime().dbl());
 
            send(sendMsg, "dataOut");
            EV<<"sent message with id "<<sendMsg->getSeq_Num()<< " and content of"<<sendMsg->getM_Payload()<<endl;
-
+           output->WriteToFile(nodeId, othernodeID, true, sendMsg->getSeq_Num(),
+                   sendMsg->getM_Payload(), sendMsg->getSendingTime(), errorBits, 1);
            // if the sender finishes sending data. output file
-           if (id==size)
+           EV<<"id"<<id << "total lines os msg"<<total_num_msg<<endl;
+           if (id==total_num_msg-1)
            {
 
+               output->WriteFinishLine(nodeId, othernodeID, true);
+               output->WriteStatsLine(nodeId, othernodeID, simTime().dbl(), 10, 1.333);
            }
         }
         else // reciever
@@ -190,8 +197,10 @@ void Node::handleMessage(cMessage *msg)
             DataMsg_Base *dataMsg = check_and_cast<DataMsg_Base *>(msg);
             std::string out = "out";
             std::string gate = out + std::to_string(othernodeID);
-            send(dataMsg, "dataOut");
+           // send(dataMsg, "dataOut");
+            sendDelayed(dataMsg, 0.2, "dataOut");
             EV<<"Recieved message with id "<<dataMsg->getSeq_Num()<< " and content of"<<dataMsg->getM_Payload()<<endl;
+            output->WriteToFile(othernodeID, nodeId,false, dataMsg->getSeq_Num(), dataMsg->getM_Payload(), simTime().dbl(), "0000", 1);
         }
 
     }

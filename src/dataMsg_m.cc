@@ -521,7 +521,7 @@ std::string DataMsgDescriptor::getFieldValueAsString(void *object, int field, in
         case 3: return oppstring2string(pp->getM_Payload());
         case 4: return long2string(pp->getPiggy());
         case 5: return long2string(pp->getPiggyID());
-        case 6: return oppstring2string(pp->getMycheckbits());
+        //case 6: return oppstring2string(pp->getMycheckbits());
         default: return "";
     }
 }

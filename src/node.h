@@ -32,6 +32,7 @@ class Node : public cSimpleModule
 protected:
   virtual void initialize();
   virtual void handleMessage(cMessage *msg);
+  Input *output;
 public:
   bool nodeFileRead = false;
   //int nodeStartingTime=-1;
