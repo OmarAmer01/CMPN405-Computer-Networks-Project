@@ -22,7 +22,7 @@ network MainNet
         coordinator: Coordinator {
             @display("p=194,194;i=block/cogwheel");
         }
-        node: Node {
+        node0: Node {
             @display("p=74,55;i=block/socket");
         }
         node1: Node {
@@ -30,7 +30,7 @@ network MainNet
         }
     connections:
         coordinator.out1 --> node1.coordIn;
-        coordinator.out0 --> node.coordIn;
-        node.dataOut --> node1.dataIn;
-        node1.dataOut --> node.dataIn;
+        coordinator.out0 --> node0.coordIn;
+        node0.dataOut --> node1.dataIn;
+        node1.dataOut --> node0.dataIn;
 }

@@ -16,7 +16,7 @@ struct coordFileLine
 
 struct nodeFileLine
 {
-    int errorNibble = 0;
+    string errorNibble ="0000";
     string payLoad;
 };
 

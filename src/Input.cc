@@ -2,6 +2,7 @@
 #include "Input.h"
 #include <iostream>
 #include<fstream>
+#include <string>
 Input::Input()
 {
     // TODO Auto-generated constructor stub
@@ -18,8 +19,10 @@ coordFileLine Input::parseCoordLine(string line)
     coordFileLine coordLine;
 
     // we also know for sure that the first charachter is the node id.
-    coordLine.nodeId = line[0] - '0';
-
+    if (line[0]=='0')
+        coordLine.nodeId = 0;
+    else
+        coordLine.nodeId = line[0]-'0';
     // skip a space, then we have the input file name.
     int i = 2;
     while (line[i] != ' ')
@@ -86,7 +89,7 @@ nodeFileLine Input::parseNodeLine(string line){
     nodeFileLine nodeLine;
     
     // we know that the first 4 chars are always of the error nibble.
-    nodeLine.errorNibble = stoi(line.substr(0,4));
+    nodeLine.errorNibble = stoi(line.substr(0,3));
 
     // starting from the 5th charachter, everything that follows is the payload.
     nodeLine.payLoad = line.substr(5);
