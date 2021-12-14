@@ -254,6 +254,7 @@ void Node::handleMessage(cMessage *msg)
                     output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2);
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + 0.2, errorBits, 1);
+
                     scheduleAt(simTime() + 0.2, sendMsg);
                 }
                 else if (errorBitsWOmod == "111" && lost == false)
@@ -341,7 +342,7 @@ void Node::handleMessage(cMessage *msg)
                 string errorString = "0000";
                 errorString[0] = bitModded;
                 errorString[2] = packetDup;
-                
+
                 output->WriteToFile(nodeId,
                                     false,
                                     dataMsg->getSeq_Num(),

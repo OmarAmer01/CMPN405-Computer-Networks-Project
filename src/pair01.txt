@@ -26,27 +26,27 @@
 - node0 received message with id=7 and content= $Loss + DUP + Delay$ at 808.2 and piggybacking ACK 7
 - node1 sends message with id=8 and content= $ModifIcation$ at 808.4 with modification, and piggybacking ACK 1
 - node0 received message with id=8 and content= $ModifIcation$ at 808.4 with modification, and piggybacking NACK 8
-- node1 sends message with id=9 and content= $Iodification + Delay$ at 808.6 with modification, delay, and piggybacking ACK 1
-- node0 received message with id=9 and content= $Iodification + Delay$ at 1008.6 with modification, and piggybacking NACK 9
+- node1 sends message with id=9 and content= $Lodification + Delay$ at 808.6 with modification, delay, and piggybacking ACK 1
+- node0 received message with id=9 and content= $Lodification + Delay$ at 1008.6 with modification, and piggybacking NACK 9
 - node1 sends message with id=10 and content= $ModIfication + Duplication$ at 1008.8 with modification, duplicated, and piggybacking ACK 1
 - node0 received message with id=10 and content= $ModIfication + Duplication$ at 1008.8 with modification, and piggybacking NACK 10
 - node0 drops message with id=10
-- node1 sends message with id=11 and content= $Mod)fication + DUP + Delay$ at 1009 with modification, delay, duplicated, and piggybacking ACK 1
-- node0 received message with id=11 and content= $Mod)fication + DUP + Delay$ at 1209 with modification, and piggybacking NACK 11
+- node1 sends message with id=11 and content= $Modéfication + DUP + Delay$ at 1009 with modification, delay, duplicated, and piggybacking ACK 1
+- node0 received message with id=11 and content= $Modéfication + DUP + Delay$ at 1209 with modification, and piggybacking NACK 11
 - node0 drops message with id=11
-- node1 sends message with id=12 and content= $Modificqtion + Loss$ at 1209.2 with modification, loss, and piggybacking ACK 1
+- node1 sends message with id=12 and content= $Modificetion + Loss$ at 1209.2 with modification, loss, and piggybacking ACK 1
 - node1 timeout for message id=12at t=1209.4
-- node1 sends message with id=12 and content= $Modificqtion + Loss$ at 1209.4 with modification, loss, and piggybacking ACK 1
-- node0 received message with id=12 and content= $Modificatï¿½on + Loss$ at 1209.4 with modification, and piggybacking NACK 12
-- node1 sends message with id=13 and content= $Modification + Loss$+ Delay$ at 1209.6 with modification, delay, loss, and piggybacking ACK 1
+- node1 sends message with id=12 and content= $Modificetion + Loss$ at 1209.4 with modification, loss, and piggybacking ACK 1
+- node0 received message with id=12 and content= $Modificataon + Loss$ at 1209.4 with modification, and piggybacking NACK 12
+- node1 sends message with id=13 and content= $Modification + Loss + Delay$ at 1209.6 with modification, delay, loss, and piggybacking ACK 1
 - node1 timeout for message id=13at t=1409.8
-- node1 sends message with id=13 and content= $Modification + Loss$+ Delay$ at 1409.8 with modification, delay, loss, and piggybacking ACK 1
-- node0 received message with id=13 and content= $Modification + Loss + at 1409.8 with modification, and piggybacking NACK 13
-- node1 sends message with id=14 and content= $Modification + Los3 + Duplication$ at 1410 with modification, loss, duplicated, and piggybacking ACK 1
+- node1 sends message with id=13 and content= $Modification + Loss + Delay$ at 1409.8 with modification, delay, loss, and piggybacking ACK 1
+- node0 received message with id=13 and content= $Modification + Loss +0Delay$ at 1409.8 with modification, and piggybacking NACK 13
+- node1 sends message with id=14 and content= $Modification + Losq + Duplication$ at 1410 with modification, loss, duplicated, and piggybacking ACK 1
 - node1 timeout for message id=14at t=1410.2
-- node1 sends message with id=14 and content= $Modification + Los3 + Duplication$ at 1410.2 with modification, loss, duplicated, and piggybacking ACK 1
-- node0 received message with id=14 and content= $Modidication + Loss + Duplication$ at 1410.2 with modification, and piggybacking NACK 14
-- node1 sends message with id=15 and content= $Modification + Loss + DWP + Delay$ at 1410.4 with modification, delay, loss, duplicated, and piggybacking ACK 1
+- node1 sends message with id=14 and content= $Modification + Losq + Duplication$ at 1410.2 with modification, loss, duplicated, and piggybacking ACK 1
+- node0 received message with id=14 and content= $Modi&ication + Loss + Duplication$ at 1410.2 with modification, and piggybacking NACK 14
+- node1 sends message with id=15 and content= $Modification + Loss + DEP + Delay$ at 1410.4 with modification, delay, loss, duplicated, and piggybacking ACK 1
 - node1 end of input file
 ------------------------------------------------------
 - total transmission time= 1410.4
