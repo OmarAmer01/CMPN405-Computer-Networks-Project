@@ -1,6 +1,16 @@
-1100 1st msg
-1100 1st msg
-0011 2nd msg
-0000 This packet doesnt have any errors.
-0000 This packet doesnt have any errors.
-0000 This packet doesnt have any errors.
+0000 Error Free
+0001 Delay
+0010 Duplication
+0011 DUP + Delay
+0100 Loss
+0101 Loss + Delay
+0110 Loss + Duplication
+0111 Loss + DUP + Delay
+1000 Modification
+1001 Modification + Delay
+1010 Modification + Duplication
+1011 Modification + DUP + Delay
+1100 Modification + Loss
+1101 Modification + Loss + Delay
+1110 Modification + Loss + Duplication
+1111 Modification + Loss + DUP + Delay

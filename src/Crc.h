@@ -16,8 +16,7 @@ public:
     string str2Num(string str, int base);
     
     unsigned int crc8(string str);
-    unsigned int crc8Alt(string str);
-
+   
 
 };
 

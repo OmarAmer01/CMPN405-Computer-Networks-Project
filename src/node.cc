@@ -14,7 +14,7 @@
 //
 
 /// TODO: Add piggyback ID to the output and correct acknowledge number .
-// TODO: remove all the EV commands in all file expcept for input.cc
+
 #include "node.h"
 #include "Input.h"
 #include "ctrlMsg_m.h"
@@ -64,24 +64,13 @@ void Node::handleMessage(cMessage *msg)
     }
     else if (msg->isSelfMessage())
     {
-        //schedule the first msg
-        EV << "Start Time Now." << endl;
-        //dataMsg_Base *dataMsg = check_and_cast<dataMsg_Base *>(msg);
-        //dataMsg->setsendingTime(nodeStartingtime + simTime());
-        //scheduleAt(nodeStartingtime + simTime(), dataMsg);
+
         nodeFileRead = true;
-        // id++;
-        /* DataMsg_Base *dataMsg =new DataMsg_Base("Hi") ;
-        //std::string out = "dataIN";
-       // std::string gate = out + std::to_string(othernodeID);
-        send(dataMsg,"dataOut");
-        EV<<"First message is sent successfully"<<endl;*/
-        // should handle the first msg here manually as he would exit the loop
     }
 
     else if (dynamic_cast<CtrlMsg_Base *>(msg))
     {
-        EV << "I am a node and I recieved msg from the coord" << endl;
+
         // the sender is the coordinator
         CtrlMsg_Base *ctrlMsg = check_and_cast<CtrlMsg_Base *>(msg);
 
@@ -105,8 +94,7 @@ void Node::handleMessage(cMessage *msg)
             Input *input = new Input();
             this->nodeFileVector = input->parseNodeFile(ctrlMsg->getFName());
             isStartingNode = true;
-            EV << "I am the starting node, I read my file" << endl;
-            EV << "First line:" << nodeFileVector[0].payLoad;
+
             if (!nodeFileRead)
             {
                 scheduleAt(ctrlMsg->getStartTime() + simTime(), ctrlMsg);
@@ -128,7 +116,6 @@ void Node::handleMessage(cMessage *msg)
         if (id == -1) //this wwould handle the first message only
         {
             id = -1;
-            EV << "first message is about to be sent " << endl;
         }
 
         if (isStartingNode == true) // the sender side
@@ -139,16 +126,6 @@ void Node::handleMessage(cMessage *msg)
             if (dynamic_cast<DataMsg_Base *>(msg))
             {
                 DataMsg_Base *dataMsg = check_and_cast<DataMsg_Base *>(msg);
-                if (dataMsg->getPiggy() == 1)
-                {
-                    //ack
-                    EV << "I am the sender and I recieved an ack" << endl;
-                }
-                else
-                {
-                    //nAck
-                    EV << "I am the sender and I recieved a NACK" << endl;
-                }
             }
             nodeFileLine inputLine;
             int total_num_msg = nodeFileVector.size();
@@ -165,11 +142,6 @@ void Node::handleMessage(cMessage *msg)
             char packetLoss = errorBits[1];
             char packetDup = errorBits[2];
             char packetDelay = errorBits[3];
-
-            EV << "singleBitMod: " << singleBitMod << endl;
-            EV << "packetLoss: " << packetLoss << endl;
-            EV << "packetDup: " << packetDup << endl;
-            EV << "packetDelay: " << packetDelay << endl;
 
             //frame and send the msg
             DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
@@ -195,7 +167,7 @@ void Node::handleMessage(cMessage *msg)
             Crc *crcObj = new Crc();
             string CRC = "CRCBYTE";
 
-            unsigned int CRCInt = crcObj->crc8Alt(payload);
+            unsigned int CRCInt = crcObj->crc8(payload);
 
             // convert the CRCint to string
             stringstream ss;
@@ -205,9 +177,6 @@ void Node::handleMessage(cMessage *msg)
             if (singleBitMod == '1')
             {
 
-                EV << "CHNAGE BIT ERROR" << endl;
-                EV << "payload before error:" << payload << endl;
-
                 // generate a random integer between 1 and payload length-1 (select random character)
                 int randomIndex = intuniform(1, size - 1);
 
@@ -216,20 +185,11 @@ void Node::handleMessage(cMessage *msg)
 
                 // flip the bit at that index to a random bit
                 payload[randomIndex] = payload[randomIndex] ^ (1 << randomBitIndex);
-
-                EV << "Payload after modification:" << payload << endl;
-            }
-
-            if (packetDup == '1')
-            {
-                EV << "PACKET DUPLICATION ERROR" << endl;
             }
 
             sendMsg->setM_Payload(payload.c_str());
             sendMsg->setMycheckbits(CRC.c_str());
             sendMsg->setSendingTime(simTime().dbl());
-
-            //send(sendMsg, "dataOut");
 
             if (id == total_num_msg - 1)
             {
@@ -246,6 +206,7 @@ void Node::handleMessage(cMessage *msg)
                 // 2.DUP
                 // 3.DELAY
                 // 4.LOSS
+
                 if (lost == false)
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), sendMsg->getSendingTime(), errorBits, 1);
@@ -275,13 +236,6 @@ void Node::handleMessage(cMessage *msg)
                                         sendMsg->getM_Payload(), simTime().dbl() + 0.2, errorBits, 1);
                     scheduleAt(simTime() + 0.2, sendMsg); // wait for a perriod equals the delay at the reciever side
                                                           // to send the same message again
-
-                    // If the packet is lost
-                    // Losing the packet means that we will deadlock-wait for an ack/nack.
-                    // So, we will send the message again after 10 secs. this number is arbitrarly chosen.
-                    // This is a hack, but it works.
-
-                    //sendDelayed(sendMsg, 10, "dataOut");
                 }
                 else if (errorBitsWOmod == "101" && lost == false)
                 { // Loss & Delay
@@ -291,8 +245,6 @@ void Node::handleMessage(cMessage *msg)
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 0.2, errorBits, 1);
                     scheduleAt(simTime() + 0.2 + par("delayPeriod").doubleValue(), sendMsg);
-
-                    //sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut");
                 }
                 else if (errorBitsWOmod == "110" && lost == false)
                 { // Loss & Dup
@@ -342,7 +294,9 @@ void Node::handleMessage(cMessage *msg)
             string CRC = dataMsg->getMycheckbits();
 
             Crc *crcObj = new Crc();
-            reCalcCrc8 = crcObj->crc8Alt(payload);
+            reCalcCrc8 = crcObj->crc8(payload);
+
+            // Convert the CRC integer into a string.
 
             stringstream ss;
             ss << reCalcCrc8;
@@ -352,9 +306,6 @@ void Node::handleMessage(cMessage *msg)
 
             std::string out = "out";
             std::string gate = out + std::to_string(othernodeID);
-            //send(dataMsg, "dataOut");
-            EV << "RECIEVED CRC = " << CRC << endl;
-            EV << "RECALC CRC = " << reCalcCrc8Str << endl;
 
             if (reCalcCrc8Str == CRC)
             {
@@ -383,14 +334,21 @@ void Node::handleMessage(cMessage *msg)
             {
                 // The message is not duplicated
                 // send the ACK
-                dataMsg->setPiggy(1);
+                //dataMsg->setPiggy(1);
                 packetDup = '0';
                 sendDelayed(dataMsg, 0.2, "dataOut");
 
                 string errorString = "0000";
                 errorString[0] = bitModded;
                 errorString[2] = packetDup;
-                output->WriteToFile(nodeId, false, dataMsg->getSeq_Num(), dataMsg->getM_Payload(), simTime().dbl(), errorString, dataMsg->getPiggy());
+                
+                output->WriteToFile(nodeId,
+                                    false,
+                                    dataMsg->getSeq_Num(),
+                                    dataMsg->getM_Payload(),
+                                    simTime().dbl(),
+                                    errorString,
+                                    dataMsg->getPiggy());
             }
 
             prevMessageSeqNum = dataMsg->getSeq_Num(); // in the first time, prevMessageSeqNum = -1, so the first message will be sent with ACK always

@@ -182,25 +182,41 @@ void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double
         loss = " delay,";
     error = mod + loss + dup + delay;
 
+    string ackNack;
+    if (ack == 1)
+        ackNack = "ACK";
+    else
+        ackNack = "NACK";
+
+    if (e != "0000")
+        error = " with " + error;
+
     //int nodeID;
     if (isSender)
     {
         sendorNOT = "sends";
-        // nodeID = senderID;
+
+        my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
+                << " and content= " << msg << " at " << time << error
+                << " and piggybacking " << ackNack << " " << ack << endl;
+
+        EV << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
+           << " and content= " << msg << " at " << time << error
+           << " and piggybacking " << ackNack << " " << ack << endl;
     }
     else
     {
         sendorNOT = "received";
-        //   nodeID = receiverID;
+
+        my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
+                << " and content= " << msg << " at " << time << error
+                << " and piggybacking " << ackNack << " " << msgID << endl;
+
+        EV << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
+           << " and content= " << msg << " at " << time << error
+           << " and piggybacking " << ackNack << " " << msgID << endl;
     }
-    if (e != "0000")
-        error = " with " + error;
-    my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
-            << " and content= " << msg << " at " << time << error
-            << " and piggybacking Ack number " << ack << endl;
-    EV << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
-            << " and content= " << msg << " at " << time << error
-            << " and piggybacking Ack number " << ack << endl;
+
     my_file.close();
 }
 
@@ -259,8 +275,8 @@ void Input::WriteStatsLine(int nodeID, double totalTime, int totalTranNum, doubl
             << "- the network throughput=" << throuput << endl;
     EV << "------------------------------------------------------" << endl;
     EV << "- total transmission time= " << totalTime << endl
-            << "- total number of transmissions= " << totalTranNum << endl
-            << "- the network throughput=" << throuput << endl;
+       << "- total number of transmissions= " << totalTranNum << endl
+       << "- the network throughput=" << throuput << endl;
     my_file.close();
 }
 
@@ -302,7 +318,7 @@ void Input::writeDropMsg(int nodeID, int msgID)
     my_file << "- node" << nodeID << " drops message with id=" << msgID << endl;
     EV << "- node" << nodeID << " drops message with id=" << msgID << endl;
 }
-void Input::writeTimeOut(int nodeID, int msgID , double t)
+void Input::writeTimeOut(int nodeID, int msgID, double t)
 {
     fstream my_file;
     string sender;
@@ -319,8 +335,8 @@ void Input::writeTimeOut(int nodeID, int msgID , double t)
     }
     string FileName = "pair" + sender + receiver + ".txt";
     my_file.open(FileName, std::ios::app);
-    my_file << "- node" << nodeID << " timeout for message id=" << msgID << "at t="<< t<<endl;
-    EV << "- node" << nodeID << " timeout for message id=" << msgID << "at t="<< t<<endl;
+    my_file << "- node" << nodeID << " timeout for message id=" << msgID << "at t=" << t << endl;
+    EV << "- node" << nodeID << " timeout for message id=" << msgID << "at t=" << t << endl;
 }
 
 Input::~Input()
