@@ -36,7 +36,9 @@ protected:
 
 public:
   int duplicates = 0;
+  int losses=0;
   bool nodeFileRead = false;
+  bool lost=false;
   //int nodeStartingTime=-1;
   bool isStartingNode = false;
   double totalTrans_Time = 0.0;

@@ -4,7 +4,9 @@
 
 #include <string>
 #include <vector>
+#include <omnetpp.h>
 using namespace std;
+using namespace omnetpp;
 
 struct coordFileLine
 {
@@ -32,6 +34,8 @@ public:
     void WriteStatsLine(int senderID, double totalTime, int totalTranNum, double throuput);
     void WriteFinishLine(int senderID,  bool isSender);
     void closeLogFile(int senderID);
+    void writeDropMsg(int nodeID, int msgID);
+    void writeTimeOut(int nodeID, int msgID , double t);
     string fname;
 
 private:

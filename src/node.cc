@@ -13,13 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-/// FIXME: last message doesnt send. 
-
-/// TODO: Remove the pair01.txt when we start the simulation.
 /// TODO: Add piggyback ID to the output and correct acknowledge number .
-/// TODO: Increment the duplicates counter.
-/// TODO: add the timeout to the output file
-
+// TODO: remove all the EV commands in all file expcept for input.cc
 #include "node.h"
 #include "Input.h"
 #include "ctrlMsg_m.h"
@@ -63,8 +58,11 @@ void Node::handleMessage(cMessage *msg)
 
     // if loop index == inputfile size
     // output end of sending
-
-    if (msg->isSelfMessage())
+    if (msg->isSelfMessage() && dynamic_cast<DataMsg_Base *>(msg))
+    {
+        lost = true;
+    }
+    else if (msg->isSelfMessage())
     {
         //schedule the first msg
         EV << "Start Time Now." << endl;
@@ -80,6 +78,7 @@ void Node::handleMessage(cMessage *msg)
         EV<<"First message is sent successfully"<<endl;*/
         // should handle the first msg here manually as he would exit the loop
     }
+
     else if (dynamic_cast<CtrlMsg_Base *>(msg))
     {
         EV << "I am a node and I recieved msg from the coord" << endl;
@@ -117,6 +116,10 @@ void Node::handleMessage(cMessage *msg)
             output->openLogFile(nodeId);
             return;
         }
+    }
+    else
+    {
+        lost = false;
     }
 
     if ((dynamic_cast<CtrlMsg_Base *>(msg) && id == -1) || dynamic_cast<DataMsg_Base *>(msg))
@@ -214,8 +217,6 @@ void Node::handleMessage(cMessage *msg)
                 // flip the bit at that index to a random bit
                 payload[randomIndex] = payload[randomIndex] ^ (1 << randomBitIndex);
 
-
-
                 EV << "Payload after modification:" << payload << endl;
             }
 
@@ -229,12 +230,13 @@ void Node::handleMessage(cMessage *msg)
             sendMsg->setSendingTime(simTime().dbl());
 
             //send(sendMsg, "dataOut");
-            output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                sendMsg->getM_Payload(), sendMsg->getSendingTime(), errorBits, 1);
+
             if (id == total_num_msg - 1)
             {
+                output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
+                                    sendMsg->getM_Payload(), sendMsg->getSendingTime(), errorBits, 1);
                 output->WriteFinishLine(nodeId, true);
-                output->WriteStatsLine(nodeId, simTime().dbl(), id + 1 + duplicates, 1.333);
+                output->WriteStatsLine(nodeId, simTime().dbl(), id + 1 + duplicates + losses, (id + 1) / simTime().dbl());
             }
             else
             {
@@ -244,31 +246,36 @@ void Node::handleMessage(cMessage *msg)
                 // 2.DUP
                 // 3.DELAY
                 // 4.LOSS
-
+                if (lost == false)
+                    output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
+                                        sendMsg->getM_Payload(), sendMsg->getSendingTime(), errorBits, 1);
                 string errorBitsWOmod = errorBits.substr(1, 3);
-
-                if (errorBitsWOmod == "000")
-                {                             // No Error
-                    send(sendMsg, "dataOut"); // Send the message normally
-                }
-                else if (errorBitsWOmod == "001")
+                if (errorBitsWOmod == "001")
                 {                                                                      // Delay Only
                     sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut"); // Send the message after the delay specified in the .ini file
                 }
                 else if (errorBitsWOmod == "010")
-                {                                                 // Dup only
+                {
+                    duplicates++;                                 // Dup only
                     send(sendMsg, "dataOut");                     // Send the message
                     sendDelayed(sendMsg->dup(), 0.01, "dataOut"); // and its duplicate after a small delay
                 }
                 else if (errorBitsWOmod == "011")
                 { // Dup & Delay
-
+                    duplicates++;
                     sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut");               // Send the message after the delay specified in the .ini file
                     sendDelayed(sendMsg->dup(), par("delayPeriod").doubleValue() + 0.01, "dataOut"); // and its duplicate after a small delay
                 }
-                else if (errorBitsWOmod == "100")
+                else if (errorBitsWOmod == "100" && lost == false)
                 { // Loss Only
-                    /// TODO: use a timer to break the deadlock instead.
+                    losses++;
+                    id--;
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2); //decrement the id so that it would resend the message
+                    output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
+                                        sendMsg->getM_Payload(), simTime().dbl() + 0.2, errorBits, 1);
+                    scheduleAt(simTime() + 0.2, sendMsg); // wait for a perriod equals the delay at the reciever side
+                                                          // to send the same message again
+
                     // If the packet is lost
                     // Losing the packet means that we will deadlock-wait for an ack/nack.
                     // So, we will send the message again after 10 secs. this number is arbitrarly chosen.
@@ -276,31 +283,40 @@ void Node::handleMessage(cMessage *msg)
 
                     //sendDelayed(sendMsg, 10, "dataOut");
                 }
-                else if (errorBitsWOmod == "101")
+                else if (errorBitsWOmod == "101" && lost == false)
                 { // Loss & Delay
-                    /// TODO: use a timer to break the deadlock instead.
-                    // TODO: CALCULATE THE TIME OF THE DELAY
+                    losses++;
+                    id--;
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2 + par("delayPeriod").doubleValue());
+                    output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 0.2, errorBits, 1);
+                    scheduleAt(simTime() + 0.2 + par("delayPeriod").doubleValue(), sendMsg);
 
                     //sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut");
                 }
-                else if (errorBitsWOmod == "110")
+                else if (errorBitsWOmod == "110" && lost == false)
                 { // Loss & Dup
-                    /// TODO: use a timer to break the deadlock instead.
-                    // TODO: CALCULATE THE TIME OF THE DUPLICATE
-
-                    //send(sendMsg, "dataOut");
-                    //sendDelayed(sendMsg->dup(), 0.01, "dataOut");
-
-                    // TODO: CALCULATE THE TIME OF THE DUPLICATE
+                    duplicates++;
+                    losses++;
+                    id--;
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2);
+                    output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
+                                        sendMsg->getM_Payload(), simTime().dbl() + 0.2, errorBits, 1);
+                    scheduleAt(simTime() + 0.2, sendMsg);
                 }
-                else if (errorBitsWOmod == "111")
+                else if (errorBitsWOmod == "111" && lost == false)
                 { // Loss & Dup & Delay
-                    /// TODO: use a timer to break the deadlock instead.
-                    // TODO: CALCULATE THE TIME OF THE DUPLICATE
-                    // TODO: CALCULATE THE TIME OF THE DELAY
-
-                    sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut");               // Send the message after the delay specified in the .ini file
-                    sendDelayed(sendMsg->dup(), par("delayPeriod").doubleValue() + 0.01, "dataOut"); // and its duplicate after a small delay
+                    duplicates++;
+                    losses++;
+                    id--;
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() + 0.2);
+                    output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 0.2, errorBits, 1);
+                    scheduleAt(simTime() + par("delayPeriod").doubleValue() + 0.2, sendMsg);
+                }
+                else
+                {
+                    send(sendMsg, "dataOut");
                 }
             }
         }
@@ -350,7 +366,7 @@ void Node::handleMessage(cMessage *msg)
             else
             {
                 // There was atleast one bit error.
-    
+
                 bitModded = '1';
                 dataMsg->setPiggy(0);
             }
@@ -361,10 +377,8 @@ void Node::handleMessage(cMessage *msg)
                 // send the NACK
                 dataMsg->setPiggy(0);
                 packetDup = '1';
-
-                /// TODO: PRINT RECIEVER DROPS THE MESSAGE, WHEN WE SEND THE DUPLICATES
-            } 
-            
+                output->writeDropMsg(nodeId, dataMsg->getSeq_Num());
+            }
             else
             {
                 // The message is not duplicated

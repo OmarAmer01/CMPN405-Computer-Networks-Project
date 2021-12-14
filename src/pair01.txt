@@ -1,18 +1,21 @@
-- node1 sends message with id=0 and content= $1st msg$ at 6 with  duplicated, and piggybacking Ack number 1
-- node0 received message with id=0 and content= $1st msg$ at 6 with  and piggybacking Ack number 1
-- node1 sends message with id=1 and content= $2nd msg$ at 6.2 with  delay, duplicated, and piggybacking Ack number 1
-- node0 received message with id=1 and content= $2nd msg$ at 206.2 with  and piggybacking Ack number 1
-- node1 sends message with id=2 and content= $smsg$ at 206.4 with modification, duplicated, and piggybacking Ack number 1
-- node0 received message with id=2 and content= $smsg$ at 206.4 with modification, and piggybacking Ack number 1
-- node1 sends message with id=3 and content= $4osg$ at 206.6 with modification, duplicated, and piggybacking Ack number 1
-- node0 received message with id=3 and content= $4osg$ at 206.6 with modification, and piggybacking Ack number 1
-- node1 sends message with id=4 and content= $1msg$ at 206.8 with modification, delay, duplicated, and piggybacking Ack number 1
-- node0 received message with id=4 and content= $1msg$ at 406.8 with modification, and piggybacking Ack number 1
-- node1 sends message with id=5 and content= $6msg$ at 407 with  delay, and piggybacking Ack number 1
-- node0 received message with id=5 and content= $6msg$ at 607 with  and piggybacking Ack number 1
-- node1 sends message with id=6 and content= $This packet doesnt have any errors.$ at 607.2 with  and piggybacking Ack number 1
-node1 end of input file
+- node1 sends message with id=0 and content= $1st Msg$ at 6 with modification, loss, and piggybacking Ack number 1
+- node1 timeout for message id=0at t=6.2
+- node1 sends message with id=0 and content= $1st Msg$ at 6.2 with modification, loss, and piggybacking Ack number 1
+- node0 received message with id=0 and content= $1st mrg$ at 6.2 with modification, and piggybacking Ack number 1
+- node1 sends message with id=1 and content= $9st msg$ at 6.4 with modification, loss, and piggybacking Ack number 1
+- node1 timeout for message id=1at t=6.6
+- node1 sends message with id=1 and content= $9st msg$ at 6.6 with modification, loss, and piggybacking Ack number 1
+- node0 received message with id=1 and content= $1st$msg$ at 6.6 with modification, and piggybacking Ack number 1
+- node1 sends message with id=2 and content= $2nd msg$ at 6.8 with  delay, duplicated, and piggybacking Ack number 1
+- node0 received message with id=2 and content= $2nd msg$ at 206.8 and piggybacking Ack number 1
+- node0 drops message with id=2
+- node1 sends message with id=3 and content= $This packet doesnt have any errors.$ at 207 and piggybacking Ack number 1
+- node0 received message with id=3 and content= $This packet doesnt have any errors.$ at 207 and piggybacking Ack number 1
+- node1 sends message with id=4 and content= $This packet doesnt have any errors.$ at 207.2 and piggybacking Ack number 1
+- node0 received message with id=4 and content= $This packet doesnt have any errors.$ at 207.2 and piggybacking Ack number 1
+- node1 sends message with id=5 and content= $This packet doesnt have any errors.$ at 207.4 and piggybacking Ack number 1
+- node1 end of input file
 ------------------------------------------------------
-total transmission time= 607.2
-total number of transmissions= 7
-the network throughput=1.333
+- total transmission time= 207.4
+- total number of transmissions= 9
+- the network throughput=0.0289296

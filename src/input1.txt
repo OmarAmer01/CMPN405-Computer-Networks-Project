@@ -1,8 +1,6 @@
-0010 1st msg
+1100 1st msg
+1100 1st msg
 0011 2nd msg
-1010 3msg
-1010 4msg
-1011 5msg
-0001 6msg
 0000 This packet doesnt have any errors.
-
+0000 This packet doesnt have any errors.
+0000 This packet doesnt have any errors.
