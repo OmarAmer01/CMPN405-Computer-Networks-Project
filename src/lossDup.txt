@@ -1,0 +1,4 @@
+0110 Loss Dup.
+0100 Loss only
+0010 Dup only
+0000 This message is error free
