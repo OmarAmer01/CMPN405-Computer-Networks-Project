@@ -1,0 +1,21 @@
+- node0 sends message with id=0 and content= $A flower, sometimes known as a bloom or bloswom$ at 3 with modification, duplicated, and piggybacking ACK 1
+- node1 received message with id=0 and content= $A flower, sometimes known as a bloom or bloswom$ at 3 with modification, and piggybacking NACK 0
+- node1 drops message with id=0
+- node0 sends message with id=1 and content= $is the reproductive/$ structure found in flowering plants$ at 3.2 and piggybacking ACK 1
+- node1 received message with id=1 and content= $is the reproductive/$ structure found in flowering plants$ at 3.2 and piggybacking ACK 1
+- node0 sends message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 3.4 with  loss, and piggybacking ACK 1
+- node0 timeout for message id=2at t=3.6
+- node0 sends message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 3.6 with  loss, and piggybacking ACK 1
+- node1 received message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 3.6 and piggybacking ACK 2
+- node0 sends message with id=3 and content= $The biological function of a flower is to facilitate reproduction,$ at 3.8 and piggybacking ACK 1
+- node1 received message with id=3 and content= $The biological function of a flower is to facilitate reproduction,$ at 3.8 and piggybacking ACK 3
+- node0 sends message with id=4 and content= $usually by providing a mechanism for the union of sperm with eggs.$ at 4 with  delay, and piggybacking ACK 1
+- node1 received message with id=4 and content= $usually by providing a mechanism for the union of sperm with eggs.$ at 204 and piggybacking ACK 4
+- node0 sends message with id=5 and content= $Flowers may facilitate outcrossing/$$ at 204.2 and piggybacking ACK 1
+- node1 received message with id=5 and content= $Flowers may facilitate outcrossing/$$ at 204.2 and piggybacking ACK 5
+- node0 sends message with id=6 and content= $(fusion of sperm and eggs from different individuals in a population)$ at 204.4 and piggybacking ACK 1
+- node0 end of input file
+------------------------------------------------------
+- total transmission time= 204.4
+- total number of transmissions= 9
+- the network throughput=0.0342466

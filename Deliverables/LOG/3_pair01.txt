@@ -1,0 +1,15 @@
+- node0 sends message with id=0 and content= $A cherry blossom is a flower of many trees of genus/$ Prunus or Prunus subg.$ at 3 with  delay, and piggybacking ACK 1
+- node1 received message with id=0 and content= $A cherry blossom is a flower of many trees of genus/$ Prunus or Prunus subg.$ at 203 and piggybacking ACK 0
+- node0 sends message with id=1 and content= $They are also known as Japanese cherry and Sakura$ at 203.2 with  delay, duplicated, and piggybacking ACK 1
+- node1 received message with id=1 and content= $They are also known as Japanese cherry and Sakura$ at 403.2 and piggybacking ACK 1
+- node1 drops message with id=1
+- node0 sends message with id=2 and content= $They generally refer to /$ ornamental cherry trees,$ at 403.4 and piggybacking ACK 1
+- node1 received message with id=2 and content= $They generally refer to /$ ornamental cherry trees,$ at 403.4 and piggybacking ACK 2
+- node0 sends message with id=3 and content= $not to be confused with cherry trees that// produce fruit for eating.$ at 403.6 and piggybacking ACK 1
+- node1 received message with id=3 and content= $not to be confused with cherry trees that// produce fruit for eating.$ at 403.6 and piggybacking ACK 3
+- node0 sends message with id=4 and content= $It is considered// the national flower of Jaðan.$ at 403.8 with modification, and piggybacking ACK 1
+- node0 end of input file
+------------------------------------------------------
+- total transmission time= 403.8
+- total number of transmissions= 6
+- the network throughput=0.0123824

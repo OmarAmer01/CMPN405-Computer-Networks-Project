@@ -13,7 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-/// TODO: Add piggyback ID to the output and correct acknowledge number .
+/// TODO: Timer on all messages even if error free, lw m7sl4 loss disbale el timer
+/// TODO: bdl ma heya recieved, htb2a sent , fel wording bta3 el output
 
 #include "node.h"
 #include "Input.h"
@@ -233,39 +234,40 @@ void Node::handleMessage(cMessage *msg)
                     id--;
                     output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2); //decrement the id so that it would resend the message
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() + 0.2, errorBits, 1);
-                    scheduleAt(simTime() + 0.2, sendMsg); // wait for a perriod equals the delay at the reciever side
+                                        sendMsg->getM_Payload(), simTime().dbl() + 5, errorBits, 1);
+                    scheduleAt(simTime() + 5, sendMsg); // wait for a perriod equals the delay at the reciever side
                                                           // to send the same message again
                 }
                 else if (errorBitsWOmod == "101" && lost == false)
                 { // Loss & Delay
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2 + par("delayPeriod").doubleValue());
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 5+ par("delayPeriod").doubleValue());
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 0.2, errorBits, 1);
-                    scheduleAt(simTime() + 0.2 + par("delayPeriod").doubleValue(), sendMsg);
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 5, errorBits, 1);
+                    scheduleAt(simTime() + 5 + par("delayPeriod").doubleValue(), sendMsg);
                 }
                 else if (errorBitsWOmod == "110" && lost == false)
                 { // Loss & Dup
                     duplicates++;
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2);
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 5);
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() + 0.2, errorBits, 1);
+                                        sendMsg->getM_Payload(), simTime().dbl() +5, errorBits, 1);
 
-                    scheduleAt(simTime() + 0.2, sendMsg);
+                    scheduleAt(simTime() +5, sendMsg);
                 }
+                /// TODO: PHASE time out period ==> change to one parameter
                 else if (errorBitsWOmod == "111" && lost == false)
                 { // Loss & Dup & Delay
                     duplicates++;
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() + 0.2);
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() +5);
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 0.2, errorBits, 1);
-                    scheduleAt(simTime() + par("delayPeriod").doubleValue() + 0.2, sendMsg);
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 5, errorBits, 1);
+                    scheduleAt(simTime() + par("delayPeriod").doubleValue() + 5, sendMsg);
                 }
                 else
                 {

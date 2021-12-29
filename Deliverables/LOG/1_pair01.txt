@@ -1,0 +1,44 @@
+- node0 sends message with id=0 and content= $The violin, sometimes known as a fiddle$ at 3 and piggybacking ACK 1
+- node1 received message with id=0 and content= $The violin, sometimes known as a fiddle$ at 3 and piggybacking ACK 0
+- node0 sends message with id=1 and content= $is a wooden chordophone (string instrument)$ at 3.2 with  duplicated, and piggybacking ACK 1
+- node1 received message with id=1 and content= $is a wooden chordophone (string instrument)$ at 3.2 and piggybacking ACK 1
+- node1 drops message with id=1
+- node0 sends message with id=2 and content= $in the violin family.$ at 3.4 with  loss, and piggybacking ACK 1
+- node0 timeout for message id=2at t=3.6
+- node0 sends message with id=2 and content= $in the violin family.$ at 3.6 with  loss, and piggybacking ACK 1
+- node1 received message with id=2 and content= $in the violin family.$ at 3.6 and piggybacking ACK 2
+- node0 sends message with id=3 and content= $Most violins have a hollow wooden body.$ at 3.8 with  loss, duplicated, and piggybacking ACK 1
+- node0 timeout for message id=3at t=4
+- node0 sends message with id=3 and content= $Most violins have a hollow wooden body.$ at 4 with  loss, duplicated, and piggybacking ACK 1
+- node1 received message with id=3 and content= $Most violins have a hollow wooden body.$ at 4 and piggybacking ACK 3
+- node0 sends message with id=4 and content= $It is the smallest and thus highest-pitched instrument$ at 4.2 and piggybacking ACK 1
+- node1 received message with id=4 and content= $It is the smallest and thus highest-pitched instrument$ at 4.2 and piggybacking ACK 4
+- node0 sends message with id=5 and content= $(soprano) in the family in regular use.$ at 4.4 and piggybacking ACK 1
+- node1 received message with id=5 and content= $(soprano) in the family in regular use.$ at 4.4 and piggybacking ACK 5
+- node0 sends message with id=6 and content= $[a] The violin typically has four strings,$ at 4.6 and piggybacking ACK 1
+- node1 received message with id=6 and content= $[a] The violin typically has four strings,$ at 4.6 and piggybacking ACK 6
+- node0 sends message with id=7 and content= $(some can have five/$), usually tuned in perfect$ at 4.8 and piggybacking ACK 1
+- node1 received message with id=7 and content= $(some can have five/$), usually tuned in perfect$ at 4.8 and piggybacking ACK 7
+- node0 sends message with id=8 and content= $fifths with notes G3, D4, A4, E5,$ at 5 and piggybacking ACK 1
+- node1 received message with id=8 and content= $fifths with notes G3, D4, A4, E5,$ at 5 and piggybacking ACK 8
+- node0 sends message with id=9 and content= $and is most commonly played by drawing$ at 5.2 with  loss, and piggybacking ACK 1
+- node0 timeout for message id=9at t=5.4
+- node0 sends message with id=9 and content= $and is most commonly played by drawing$ at 5.4 with  loss, and piggybacking ACK 1
+- node1 received message with id=9 and content= $and is most commonly played by drawing$ at 5.4 and piggybacking ACK 9
+- node0 sends message with id=10 and content= $a bow across its strings.$ at 5.6 and piggybacking ACK 1
+- node1 received message with id=10 and content= $a bow across its strings.$ at 5.6 and piggybacking ACK 10
+- node0 sends message with id=11 and content= $It can also be played by plucking$ at 5.8 and piggybacking ACK 1
+- node1 received message with id=11 and content= $It can also be played by plucking$ at 5.8 and piggybacking ACK 11
+- node0 sends message with id=12 and content= $vhe strings/$ with the fingers (pizzicato)$ at 6 with modification, delay, and piggybacking ACK 1
+- node1 received message with id=12 and content= $vhe strings/$ with the fingers (pizzicato)$ at 206 with modification, and piggybacking NACK 12
+- node0 sends message with id=13 and content= $and, in specialized cases, by striking$ at 206.2 and piggybacking ACK 1
+- node1 received message with id=13 and content= $and, in specialized cases, by striking$ at 206.2 and piggybacking ACK 13
+- node0 sends message with id=14 and content= $the strings with the wooden side/$ of the bow$ at 206.4 with  duplicated, and piggybacking ACK 1
+- node1 received message with id=14 and content= $the strings with the wooden side/$ of the bow$ at 206.4 and piggybacking ACK 14
+- node1 drops message with id=14
+- node0 sends message with id=15 and content= $(col legno).$ at 206.6 and piggybacking ACK 1
+- node0 end of input file
+------------------------------------------------------
+- total transmission time= 206.6
+- total number of transmissions= 22
+- the network throughput=0.0774443

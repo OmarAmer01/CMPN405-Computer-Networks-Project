@@ -1,0 +1,5 @@
+1. If a packet is lost, the sender will resend it again, with delay 0.2 secs as [TIMEOUT]
+2. In case of a loss and duplicate, the document made it clear that the loss error overrides all errors. so we do not send the duplicate, but we inlcude it in the calculations.
+3. In this phase, the sender will always send ACK 1 
+4. In this phase, the reciever will send ACK/NACK with the sequence number of the recieved message.
+5. Mo 

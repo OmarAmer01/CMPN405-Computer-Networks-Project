@@ -1,0 +1,25 @@
+- node0 sends message with id=0 and content= $Sherlock Holmes is a fictional detective$ at 3 and piggybacking ACK 1
+- node1 received message with id=0 and content= $Sherlock Holmes is a fictional detective$ at 3 and piggybacking ACK 0
+- node0 sends message with id=1 and content= $created by British author/$ Sir Arthur Conan Doyle.$ at 3.2 with  duplicated, and piggybacking ACK 1
+- node1 received message with id=1 and content= $created by British author/$ Sir Arthur Conan Doyle.$ at 3.2 and piggybacking ACK 1
+- node1 drops message with id=1
+- node0 sends message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 3.4 with  loss, and piggybacking ACK 1
+- node0 timeout for message id=2at t=3.6
+- node0 sends message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 3.6 with  loss, and piggybacking ACK 1
+- node1 received message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 3.6 and piggybacking ACK 2
+- node0 sends message with id=3 and content= $Holmes is known for his proficiency with observation,$ at 3.8 and piggybacking ACK 1
+- node1 received message with id=3 and content= $Holmes is known for his proficiency with observation,$ at 3.8 and piggybacking ACK 3
+- node0 sends message with id=4 and content= $deduction, forensic science,$ at 4 and piggybacking ACK 1
+- node1 received message with id=4 and content= $deduction, forensic science,$ at 4 and piggybacking ACK 4
+- node0 sends message with id=5 and content= $and// logical reasoning/$ that borders on the fantastic,$ at 4.2 and piggybacking ACK 1
+- node1 received message with id=5 and content= $and// logical reasoning/$ that borders on the fantastic,$ at 4.2 and piggybacking ACK 5
+- node0 sends message with id=6 and content= $which he employs when investigating cases for a wide variety of clients,$ at 4.4 with  delay, loss, and piggybacking ACK 1
+- node0 timeout for message id=6at t=204.6
+- node0 sends message with id=6 and content= $which he employs when investigating cases for a wide variety of clients,$ at 204.6 with  delay, loss, and piggybacking ACK 1
+- node1 received message with id=6 and content= $which he employs when investigating cases for a wide variety of clients,$ at 204.6 and piggybacking ACK 6
+- node0 sends message with id=7 and content= $including Scotland Yard.$ at 204.8 and piggybacking ACK 1
+- node0 end of input file
+------------------------------------------------------
+- total transmission time= 204.8
+- total number of transmissions= 11
+- the network throughput=0.0390625

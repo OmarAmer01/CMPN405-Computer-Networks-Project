@@ -1,0 +1,30 @@
+- node0 sends message with id=0 and content= $Án electric car is an automobile that is$ at 3 with modification, and piggybacking ACK 1
+- node1 received message with id=0 and content= $Án electric car is an automobile that is$ at 3 with modification, and piggybacking NACK 0
+- node0 sends message with id=1 and content= $propelled by one or more electric motors,$ at 3.2 and piggybacking ACK 1
+- node1 received message with id=1 and content= $propelled by one or more electric motors,$ at 3.2 and piggybacking ACK 1
+- node0 sends message with id=2 and content= $using energy stored in batteries.$ at 3.4 and piggybacking ACK 1
+- node1 received message with id=2 and content= $using energy stored in batteries.$ at 3.4 and piggybacking ACK 2
+- node0 sends message with id=3 and content= $Compared to internal combustion engine (ICE) vehicles,$ at 3.6 with  duplicated, and piggybacking ACK 1
+- node1 received message with id=3 and content= $Compared to internal combustion engine (ICE) vehicles,$ at 3.6 and piggybacking ACK 3
+- node1 drops message with id=3
+- node0 sends message with id=4 and content= $electric cars are quieter,$ at 3.8 with  delay, duplicated, and piggybacking ACK 1
+- node1 received message with id=4 and content= $electric cars are quieter,$ at 203.8 and piggybacking ACK 4
+- node1 drops message with id=4
+- node0 sends message with id=5 and content= $have no exhaust emissions, and lower emissions overall.$ at 204 and piggybacking ACK 1
+- node1 received message with id=5 and content= $have no exhaust emissions, and lower emissions overall.$ at 204 and piggybacking ACK 5
+- node0 sends message with id=6 and content= $In the United States and the European Union,$ at 204.2 and piggybacking ACK 1
+- node1 received message with id=6 and content= $In the United States and the European Union,$ at 204.2 and piggybacking ACK 6
+- node0 sends message with id=7 and content= $as of 2022, the total cost of ownership of recent electric vehicles$ at 204.4 with modification, and piggybacking ACK 1
+- node1 received message with id=7 and content= $as of 2022, the total cost of ownership of recent electric vehicles$ at 204.4 with modification, and piggybacking NACK 7
+- node0 sends message with id=8 and content= $is cheaper/$ than that of equivalent ICE cars,$ at 204.6 and piggybacking ACK 1
+- node1 received message with id=8 and content= $is cheaper/$ than that of equivalent ICE cars,$ at 204.6 and piggybacking ACK 8
+- node0 sends message with id=9 and content= $due to lower fueling and maintenance costs/$/$.$ at 204.8 and piggybacking ACK 1
+- node1 received message with id=9 and content= $due to lower fueling and maintenance costs/$/$.$ at 204.8 and piggybacking ACK 9
+- node0 sends message with id=10 and content= $Charging an electric car can be done at a variety of charging stations;$ at 205 and piggybacking ACK 1
+- node1 received message with id=10 and content= $Charging an electric car can be done at a variety of charging stations;$ at 205 and piggybacking ACK 10
+- node0 sends message with id=11 and content= $these charging statioos can be installed in both houses// and public areas.$ at 205.2 with modification, loss, and piggybacking ACK 1
+- node0 end of input file
+------------------------------------------------------
+- total transmission time= 205.2
+- total number of transmissions= 14
+- the network throughput=0.0584795

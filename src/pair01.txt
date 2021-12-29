@@ -1,54 +1,25 @@
-- node1 sends message with id=0 and content= $Error Free$ at 6 and piggybacking ACK 1
-- node0 received message with id=0 and content= $Error Free$ at 6 and piggybacking ACK 0
-- node1 sends message with id=1 and content= $Delay$ at 6.2 with  delay, and piggybacking ACK 1
-- node0 received message with id=1 and content= $Delay$ at 206.2 and piggybacking ACK 1
-- node1 sends message with id=2 and content= $Duplication$ at 206.4 with  duplicated, and piggybacking ACK 1
-- node0 received message with id=2 and content= $Duplication$ at 206.4 and piggybacking ACK 2
+- node1 sends message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 2 with  duplicated, and piggybacking ACK 1
+- node0 received message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 2 and piggybacking ACK 0
+- node0 drops message with id=0
+- node1 sends message with id=1 and content= $is a natural light display in Earth's sky,$ at 2.2 and piggybacking ACK 1
+- node0 received message with id=1 and content= $is a natural light display in Earth's sky,$ at 2.2 and piggybacking ACK 1
+- node1 sends message with id=2 and content= $predominantly seen in high-latitude regions$ at 2.4 with  duplicated, and piggybacking ACK 1
+- node0 received message with id=2 and content= $predominantly seen in high-latitude regions$ at 2.4 and piggybacking ACK 2
 - node0 drops message with id=2
-- node1 sends message with id=3 and content= $DUP + Delay$ at 206.6 with  delay, duplicated, and piggybacking ACK 1
-- node0 received message with id=3 and content= $DUP + Delay$ at 406.6 and piggybacking ACK 3
+- node1 sends message with id=3 and content= $haround the Arctic// and Antarctic).$ at 2.6 with modification, duplicated, and piggybacking ACK 1
+- node0 received message with id=3 and content= $haround the Arctic// and Antarctic).$ at 2.6 with modification, and piggybacking NACK 3
 - node0 drops message with id=3
-- node1 sends message with id=4 and content= $Loss$ at 406.8 with  loss, and piggybacking ACK 1
-- node1 timeout for message id=4at t=407
-- node1 sends message with id=4 and content= $Loss$ at 407 with  loss, and piggybacking ACK 1
-- node0 received message with id=4 and content= $Loss$ at 407 and piggybacking ACK 4
-- node1 sends message with id=5 and content= $Loss + Delay$ at 407.2 with  delay, loss, and piggybacking ACK 1
-- node1 timeout for message id=5at t=607.4
-- node1 sends message with id=5 and content= $Loss + Delay$ at 607.4 with  delay, loss, and piggybacking ACK 1
-- node0 received message with id=5 and content= $Loss + Delay$ at 607.4 and piggybacking ACK 5
-- node1 sends message with id=6 and content= $Loss + Duplication$ at 607.6 with  loss, duplicated, and piggybacking ACK 1
-- node1 timeout for message id=6at t=607.8
-- node1 sends message with id=6 and content= $Loss + Duplication$ at 607.8 with  loss, duplicated, and piggybacking ACK 1
-- node0 received message with id=6 and content= $Loss + Duplication$ at 607.8 and piggybacking ACK 6
-- node1 sends message with id=7 and content= $Loss + DUP + Delay$ at 608 with  delay, loss, duplicated, and piggybacking ACK 1
-- node1 timeout for message id=7at t=808.2
-- node1 sends message with id=7 and content= $Loss + DUP + Delay$ at 808.2 with  delay, loss, duplicated, and piggybacking ACK 1
-- node0 received message with id=7 and content= $Loss + DUP + Delay$ at 808.2 and piggybacking ACK 7
-- node1 sends message with id=8 and content= $ModifIcation$ at 808.4 with modification, and piggybacking ACK 1
-- node0 received message with id=8 and content= $ModifIcation$ at 808.4 with modification, and piggybacking NACK 8
-- node1 sends message with id=9 and content= $Lodification + Delay$ at 808.6 with modification, delay, and piggybacking ACK 1
-- node0 received message with id=9 and content= $Lodification + Delay$ at 1008.6 with modification, and piggybacking NACK 9
-- node1 sends message with id=10 and content= $ModIfication + Duplication$ at 1008.8 with modification, duplicated, and piggybacking ACK 1
-- node0 received message with id=10 and content= $ModIfication + Duplication$ at 1008.8 with modification, and piggybacking NACK 10
-- node0 drops message with id=10
-- node1 sends message with id=11 and content= $Modéfication + DUP + Delay$ at 1009 with modification, delay, duplicated, and piggybacking ACK 1
-- node0 received message with id=11 and content= $Modéfication + DUP + Delay$ at 1209 with modification, and piggybacking NACK 11
-- node0 drops message with id=11
-- node1 sends message with id=12 and content= $Modificetion + Loss$ at 1209.2 with modification, loss, and piggybacking ACK 1
-- node1 timeout for message id=12at t=1209.4
-- node1 sends message with id=12 and content= $Modificetion + Loss$ at 1209.4 with modification, loss, and piggybacking ACK 1
-- node0 received message with id=12 and content= $Modificataon + Loss$ at 1209.4 with modification, and piggybacking NACK 12
-- node1 sends message with id=13 and content= $Modification + Loss + Delay$ at 1209.6 with modification, delay, loss, and piggybacking ACK 1
-- node1 timeout for message id=13at t=1409.8
-- node1 sends message with id=13 and content= $Modification + Loss + Delay$ at 1409.8 with modification, delay, loss, and piggybacking ACK 1
-- node0 received message with id=13 and content= $Modification + Loss +0Delay$ at 1409.8 with modification, and piggybacking NACK 13
-- node1 sends message with id=14 and content= $Modification + Losq + Duplication$ at 1410 with modification, loss, duplicated, and piggybacking ACK 1
-- node1 timeout for message id=14at t=1410.2
-- node1 sends message with id=14 and content= $Modification + Losq + Duplication$ at 1410.2 with modification, loss, duplicated, and piggybacking ACK 1
-- node0 received message with id=14 and content= $Modi&ication + Loss + Duplication$ at 1410.2 with modification, and piggybacking NACK 14
-- node1 sends message with id=15 and content= $Modification + Loss + DEP + Delay$ at 1410.4 with modification, delay, loss, duplicated, and piggybacking ACK 1
+- node1 sends message with id=4 and content= $Auroras display dynamic patterns of brilliant lights//$ at 2.8 and piggybacking ACK 1
+- node0 received message with id=4 and content= $Auroras display dynamic patterns of brilliant lights//$ at 2.8 and piggybacking ACK 4
+- node1 sends message with id=5 and content= $that appear as curtains,$ at 3 with  delay, and piggybacking ACK 1
+- node0 received message with id=5 and content= $that appear as curtains,$ at 13 and piggybacking ACK 5
+- node1 sends message with id=6 and content= $rays, spirals/$$ at 13.2 with  loss, and piggybacking ACK 1
+- node1 timeout for message id=6at t=13.4
+- node1 sends message with id=6 and content= $rays, spirals/$$ at 18.2 with  loss, and piggybacking ACK 1
+- node0 received message with id=6 and content= $rays, spirals/$$ at 18.2 and piggybacking ACK 6
+- node1 sends message with id=7 and content= $or fynamic flickers covering the entire sky/$$ at 18.4 with modification, and piggybacking ACK 1
 - node1 end of input file
 ------------------------------------------------------
-- total transmission time= 1410.4
-- total number of transmissions= 30
-- the network throughput=0.0113443
+- total transmission time= 18.4
+- total number of transmissions= 12
+- the network throughput=0.434783
