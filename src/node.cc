@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-/// TODO: Timer on all messages even if error free, lw m7sl4 loss disbale el timer
-/// TODO: bdl ma heya recieved, htb2a sent , fel wording bta3 el output
+/// TODO: Timer on all messages even if error free, lw m7sl4 loss disbale el timer ( might be changed in SR)
+/// TODO: bdl ma heya recieved, htb2a sent , fel wording bta3 el output ... (would be changed in SR)
 
 #include "node.h"
 #include "Input.h"
@@ -234,40 +234,40 @@ void Node::handleMessage(cMessage *msg)
                     id--;
                     output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 0.2); //decrement the id so that it would resend the message
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() + 5, errorBits, 1);
-                    scheduleAt(simTime() + 5, sendMsg); // wait for a perriod equals the delay at the reciever side
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("timeOutPeriod").doubleValue(), errorBits, 1);
+                    scheduleAt(simTime() + par("timeOutPeriod").doubleValue(), sendMsg); // wait for a perriod equals the delay at the reciever side
                                                           // to send the same message again
                 }
                 else if (errorBitsWOmod == "101" && lost == false)
                 { // Loss & Delay
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 5+ par("delayPeriod").doubleValue());
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("timeOutPeriod").doubleValue()+ par("delayPeriod").doubleValue());
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 5, errorBits, 1);
-                    scheduleAt(simTime() + 5 + par("delayPeriod").doubleValue(), sendMsg);
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), errorBits, 1);
+                    scheduleAt(simTime() + par("timeOutPeriod").doubleValue()+ par("delayPeriod").doubleValue(), sendMsg);
                 }
                 else if (errorBitsWOmod == "110" && lost == false)
                 { // Loss & Dup
                     duplicates++;
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 5);
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("timeOutPeriod").doubleValue());
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() +5, errorBits, 1);
+                                        sendMsg->getM_Payload(), simTime().dbl() +par("timeOutPeriod").doubleValue(), errorBits, 1);
 
-                    scheduleAt(simTime() +5, sendMsg);
+                    scheduleAt(simTime() +par("timeOutPeriod").doubleValue(), sendMsg);
                 }
-                /// TODO: PHASE time out period ==> change to one parameter
+
                 else if (errorBitsWOmod == "111" && lost == false)
                 { // Loss & Dup & Delay
                     duplicates++;
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() +5);
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() +par("timeOutPeriod").doubleValue()  );
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 5, errorBits, 1);
-                    scheduleAt(simTime() + par("delayPeriod").doubleValue() + 5, sendMsg);
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), errorBits, 1);
+                    scheduleAt(simTime() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), sendMsg);
                 }
                 else
                 {

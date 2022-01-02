@@ -22,6 +22,7 @@ simple Node
 {
     parameters:
         double delayPeriod;
+        double timeOutPeriod;
     gates:
         output dataOut;
         input dataIn;
