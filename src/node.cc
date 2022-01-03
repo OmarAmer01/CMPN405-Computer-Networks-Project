@@ -21,6 +21,7 @@
 #include "ctrlMsg_m.h"
 #include "dataMsg_m.h"
 #include "Crc.h"
+#include "window.h"
 #include <random>
 
 using namespace std;
@@ -145,11 +146,12 @@ void Node::handleMessage(cMessage *msg)
         char singleBitMod = errorBits[0];
         char packetLoss = errorBits[1];
         char packetDup = errorBits[2];
+
         char packetDelay = errorBits[3];
 
         //frame and send the msg
         DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
-
+        
         if (id == total_num_msg - 1)
             sendMsg->setSeq_Num(-1); ///TODO:add variable to msg to check sending termination instead of ID
         else

@@ -22,11 +22,9 @@
 #include "ctrlMsg_m.h"
 #include "dataMsg_m.h"
 #include "Crc.h"
+#include "window.h"
 using namespace omnetpp;
 
-/**
- * TODO - Generated class
- */
 class Node : public cSimpleModule
 {
 protected:
@@ -43,11 +41,12 @@ protected:
   bool checkParity(string msg, int position);
   string correctHamming(string msg, int position);
   string removeHamming(string msg);
+
 public:
   int duplicates = 0;
-  int losses=0;
+  int losses = 0;
   bool nodeFileRead = false;
-  bool lost=false;
+  bool lost = false;
   //int nodeStartingTime=-1;
   bool isStartingNode = false;
   double totalTrans_Time = 0.0;
@@ -56,11 +55,13 @@ public:
   int nodeId = 0;
   int othernodeID = 0;
   int prevMessageSeqNum = -1;
-  int firstmsg =0;
-  int totalMsgNum=0;
-  int allSent=0;
-  int otherNodeDoneSending=0;
+  int firstmsg = 0;
+  int totalMsgNum = 0;
+  int allSent = 0;
+  int otherNodeDoneSending = 0;
   vector<nodeFileLine> nodeFileVector;
+  window *receivingWindow;
+  window *sendingWindow;
 };
 
 #endif
