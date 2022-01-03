@@ -151,7 +151,7 @@ void Node::handleMessage(cMessage *msg)
         DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
 
         if (id == total_num_msg - 1)
-            sendMsg->setSeq_Num(-1);
+            sendMsg->setSeq_Num(-1); ///TODO:add variable to msg to check sending termination instead of ID
         else
             sendMsg->setSeq_Num(id);
 
