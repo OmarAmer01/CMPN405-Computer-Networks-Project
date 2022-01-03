@@ -39,6 +39,7 @@ OBJS = \
     $O/Crc.o \
     $O/Input.o \
     $O/node.o \
+    $O/selectiveRepeat.o \
     $O/ctrlMsg_m.o \
     $O/dataMsg_m.o
 

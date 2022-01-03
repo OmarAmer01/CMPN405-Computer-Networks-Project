@@ -1,25 +1,10 @@
-- node1 sends message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 2 with  duplicated, and piggybacking ACK 1
-- node0 received message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 2 and piggybacking ACK 0
-- node0 drops message with id=0
-- node1 sends message with id=1 and content= $is a natural light display in Earth's sky,$ at 2.2 and piggybacking ACK 1
-- node0 received message with id=1 and content= $is a natural light display in Earth's sky,$ at 2.2 and piggybacking ACK 1
-- node1 sends message with id=2 and content= $predominantly seen in high-latitude regions$ at 2.4 with  duplicated, and piggybacking ACK 1
-- node0 received message with id=2 and content= $predominantly seen in high-latitude regions$ at 2.4 and piggybacking ACK 2
-- node0 drops message with id=2
-- node1 sends message with id=3 and content= $haround the Arctic// and Antarctic).$ at 2.6 with modification, duplicated, and piggybacking ACK 1
-- node0 received message with id=3 and content= $haround the Arctic// and Antarctic).$ at 2.6 with modification, and piggybacking NACK 3
-- node0 drops message with id=3
-- node1 sends message with id=4 and content= $Auroras display dynamic patterns of brilliant lights//$ at 2.8 and piggybacking ACK 1
-- node0 received message with id=4 and content= $Auroras display dynamic patterns of brilliant lights//$ at 2.8 and piggybacking ACK 4
-- node1 sends message with id=5 and content= $that appear as curtains,$ at 3 with  delay, and piggybacking ACK 1
-- node0 received message with id=5 and content= $that appear as curtains,$ at 13 and piggybacking ACK 5
-- node1 sends message with id=6 and content= $rays, spirals/$$ at 13.2 with  loss, and piggybacking ACK 1
-- node1 timeout for message id=6at t=13.4
-- node1 sends message with id=6 and content= $rays, spirals/$$ at 18.2 with  loss, and piggybacking ACK 1
-- node0 received message with id=6 and content= $rays, spirals/$$ at 18.2 and piggybacking ACK 6
-- node1 sends message with id=7 and content= $or fynamic flickers covering the entire sky/$$ at 18.4 with modification, and piggybacking ACK 1
-- node1 end of input file
-------------------------------------------------------
-- total transmission time= 18.4
-- total number of transmissions= 12
-- the network throughput=0.434783
+- node1 sends message with id=0 and content= $Line 1$ at 2 and piggybacking ACK 1
+- node0 received message with id=0 and content= $Line 1$ at 2 and piggybacking ACK 0
+- node1 sends message with id=1 and content= $Line 2 $ at 2.2 and piggybacking ACK 1
+- node0 received message with id=1 and content= $Line 2 $ at 2.2 and piggybacking ACK 1
+- node1 sends message with id=2 and content= $Line 3$ at 2.4 and piggybacking ACK 1
+- node0 received message with id=2 and content= $Line 3$ at 2.4 and piggybacking ACK 2
+- node1 sends message with id=3 and content= $Line 4$ at 2.6 and piggybacking ACK 1
+- node0 received message with id=3 and content= $Line 4$ at 2.6 and piggybacking ACK 3
+- node1 sends message with id=4 and content= $Line 5$ at 2.8 and piggybacking ACK 1
+- node0 received message with id=4 and content= $Line 5$ at 2.8 and piggybacking ACK 4

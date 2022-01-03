@@ -90,10 +90,17 @@ void Node::handleMessage(cMessage *msg)
         }
         else
         {
-            // the starting node
-
+            // The starting node
             Input *input = new Input();
             this->nodeFileVector = input->parseNodeFile(ctrlMsg->getFName());
+
+            /// FIXME: Find a better way to do this
+            Window converter(5, nodeFileVector, -1); // We use this instance to convert the nodeFileVector to a frameVector
+            allMsgs = converter.castAllNodeFileToFrame(nodeFileVector);
+
+            window = new Window(5, nodeFileVector, -1);
+
+
             isStartingNode = true;
 
             if (!nodeFileRead)
@@ -146,7 +153,10 @@ void Node::handleMessage(cMessage *msg)
 
             //frame and send the msg
             DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
+
+            /// TODO: Make the circular ID number.
             sendMsg->setSeq_Num(id);
+
             // we need to frame the payload before sending it
             int size = payload.size();
             int add = 0;
@@ -165,6 +175,7 @@ void Node::handleMessage(cMessage *msg)
                 }
             }
             payload = "$" + payload + "$";
+            /// OPTIMIZE: Dont make the crc object unless crc is chosen.
             Crc *crcObj = new Crc();
             string CRC = "CRCBYTE";
 
@@ -236,13 +247,13 @@ void Node::handleMessage(cMessage *msg)
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + 5, errorBits, 1);
                     scheduleAt(simTime() + 5, sendMsg); // wait for a perriod equals the delay at the reciever side
-                                                          // to send the same message again
+                                                        // to send the same message again
                 }
                 else if (errorBitsWOmod == "101" && lost == false)
                 { // Loss & Delay
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 5+ par("delayPeriod").doubleValue());
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 5 + par("delayPeriod").doubleValue());
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 5, errorBits, 1);
                     scheduleAt(simTime() + 5 + par("delayPeriod").doubleValue(), sendMsg);
@@ -254,9 +265,9 @@ void Node::handleMessage(cMessage *msg)
                     id--;
                     output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + 5);
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() +5, errorBits, 1);
+                                        sendMsg->getM_Payload(), simTime().dbl() + 5, errorBits, 1);
 
-                    scheduleAt(simTime() +5, sendMsg);
+                    scheduleAt(simTime() + 5, sendMsg);
                 }
                 /// TODO: PHASE time out period ==> change to one parameter
                 else if (errorBitsWOmod == "111" && lost == false)
@@ -264,13 +275,15 @@ void Node::handleMessage(cMessage *msg)
                     duplicates++;
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() +5);
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() + 5);
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + 5, errorBits, 1);
                     scheduleAt(simTime() + par("delayPeriod").doubleValue() + 5, sendMsg);
                 }
-                else
+                else // NO ERROR ^^
                 {
+                    // Steps:
+                    
                     send(sendMsg, "dataOut");
                 }
             }

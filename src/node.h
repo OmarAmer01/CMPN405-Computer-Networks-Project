@@ -22,6 +22,7 @@
 #include "ctrlMsg_m.h"
 #include "dataMsg_m.h"
 #include "Crc.h"
+#include "selectiveRepeat.h"
 using namespace omnetpp;
 
 /**
@@ -48,6 +49,8 @@ public:
   int othernodeID = 0;
   int prevMessageSeqNum = -1;
   vector<nodeFileLine> nodeFileVector;
+  vector<frame> allMsgs;
+  Window* window;
 };
 
 #endif
