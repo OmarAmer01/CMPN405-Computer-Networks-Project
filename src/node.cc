@@ -33,32 +33,14 @@ void Node::initialize()
 void Node::handleMessage(cMessage *msg)
 {
 
-    // check if the coordinator or the other node is the sender
-    // if the coordnator is the sender
-    // if (start)
-    // readInput("input file name reieved from the coordinator"); ---- should return array of strings
-    // else if the other node is the sender
-    //increment id
-    // if (Ack)
-    // if loop idex < inputfile size
-    //increment loop index
-    // else
-    // out put the sending and recieving are all done
-    // else if (nAck)
-    // it will send the same msg again
 
-    // loop on the array ----- note make the loop index as parameter to increase it at every recieve
-    // {
-    // cast the message...to dataMsg
-    // calculate CRC...................done Amer
-    // modify the message.......................a5er haga
-    // framing
-    // send the msg (Payload + CRC)
-    // output a msg is sent ...... output function still under work (look at your notes, yasser)
-    //}
+    /*if (dynamic_cast<CtrlMsg_Base *>(msg))
+    {
+        // read the file
 
-    // if loop index == inputfile size
-    // output end of sending
+    }*/
+
+
     if (msg->isSelfMessage() && dynamic_cast<DataMsg_Base *>(msg))
     {
         lost = true;
@@ -91,7 +73,6 @@ void Node::handleMessage(cMessage *msg)
         else
         {
             // the starting node
-
             Input *input = new Input();
             this->nodeFileVector = input->parseNodeFile(ctrlMsg->getFName());
             isStartingNode = true;
@@ -148,48 +129,25 @@ void Node::handleMessage(cMessage *msg)
             DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
             sendMsg->setSeq_Num(id);
             // we need to frame the payload before sending it
-            int size = payload.size();
-            int add = 0;
-
-            for (int i = 0; i < size; i++)
-            {
-                if (payload[i] == '$' || payload[i] == '/')
-                    add++;
-            }
-            for (int i = 0; i < size + add; i++)
-            {
-                if (payload[i] == '$' || payload[i] == '/')
-                {
-                    payload.insert(i, 1, '/');
-                    i++;
-                }
-            }
-            payload = "$" + payload + "$";
-            Crc *crcObj = new Crc();
-            string CRC = "CRCBYTE";
-
-            unsigned int CRCInt = crcObj->crc8(payload);
-
-            // convert the CRCint to string
-            stringstream ss;
-            ss << CRCInt;
-            CRC = ss.str();
-
+            payload = bitStuffing_Framing(payload);
+            //one bit modification
             if (singleBitMod == '1')
+                payload = oneBitMod(payload);
+            // adding CRC or Hamming
+            if (par("CRC").intValue() == 1)
             {
-
-                // generate a random integer between 1 and payload length-1 (select random character)
-                int randomIndex = intuniform(1, size - 1);
-
-                // choose a random number as the bit index for the randomly chosen charachter
-                int randomBitIndex = rand() % 8;
-
-                // flip the bit at that index to a random bit
-                payload[randomIndex] = payload[randomIndex] ^ (1 << randomBitIndex);
+                Crc *crcObj = new Crc();
+                string CRC = "CRCBYTE";
+                unsigned int CRCInt = crcObj->crc8(payload);
+                stringstream ss;
+                ss << CRCInt;
+                CRC = ss.str();
+                sendMsg->setMycheckbits(CRC.c_str());
             }
+            else
+                payload = addHamming(payload);
 
             sendMsg->setM_Payload(payload.c_str());
-            sendMsg->setMycheckbits(CRC.c_str());
             sendMsg->setSendingTime(simTime().dbl());
 
             if (id == total_num_msg - 1)
@@ -236,16 +194,16 @@ void Node::handleMessage(cMessage *msg)
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + par("timeOutPeriod").doubleValue(), errorBits, 1);
                     scheduleAt(simTime() + par("timeOutPeriod").doubleValue(), sendMsg); // wait for a perriod equals the delay at the reciever side
-                                                          // to send the same message again
+                                                                                         // to send the same message again
                 }
                 else if (errorBitsWOmod == "101" && lost == false)
                 { // Loss & Delay
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("timeOutPeriod").doubleValue()+ par("delayPeriod").doubleValue());
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("timeOutPeriod").doubleValue() + par("delayPeriod").doubleValue());
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), errorBits, 1);
-                    scheduleAt(simTime() + par("timeOutPeriod").doubleValue()+ par("delayPeriod").doubleValue(), sendMsg);
+                    scheduleAt(simTime() + par("timeOutPeriod").doubleValue() + par("delayPeriod").doubleValue(), sendMsg);
                 }
                 else if (errorBitsWOmod == "110" && lost == false)
                 { // Loss & Dup
@@ -254,9 +212,9 @@ void Node::handleMessage(cMessage *msg)
                     id--;
                     output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("timeOutPeriod").doubleValue());
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
-                                        sendMsg->getM_Payload(), simTime().dbl() +par("timeOutPeriod").doubleValue(), errorBits, 1);
+                                        sendMsg->getM_Payload(), simTime().dbl() + par("timeOutPeriod").doubleValue(), errorBits, 1);
 
-                    scheduleAt(simTime() +par("timeOutPeriod").doubleValue(), sendMsg);
+                    scheduleAt(simTime() + par("timeOutPeriod").doubleValue(), sendMsg);
                 }
 
                 else if (errorBitsWOmod == "111" && lost == false)
@@ -264,7 +222,7 @@ void Node::handleMessage(cMessage *msg)
                     duplicates++;
                     losses++;
                     id--;
-                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() +par("timeOutPeriod").doubleValue()  );
+                    output->writeTimeOut(nodeId, sendMsg->getSeq_Num(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue());
                     output->WriteToFile(nodeId, true, sendMsg->getSeq_Num(),
                                         sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), errorBits, 1);
                     scheduleAt(simTime() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), sendMsg);
@@ -275,7 +233,7 @@ void Node::handleMessage(cMessage *msg)
                 }
             }
         }
-        else // reciever
+        else // not starting node
         {
             // The reciever needs to check whether the recicved message is correct or not,
             // we do this by reading the message and comparing the CRC
@@ -294,37 +252,34 @@ void Node::handleMessage(cMessage *msg)
 
             DataMsg_Base *dataMsg = check_and_cast<DataMsg_Base *>(msg);
             string payload = dataMsg->getM_Payload();
-            string CRC = dataMsg->getMycheckbits();
-
-            Crc *crcObj = new Crc();
-            reCalcCrc8 = crcObj->crc8(payload);
 
             // Convert the CRC integer into a string.
-
-            stringstream ss;
-            ss << reCalcCrc8;
-            string reCalcCrc8Str = ss.str();
-
             //increase the # of trans and trnastime
-
             std::string out = "out";
             std::string gate = out + std::to_string(othernodeID);
 
-            if (reCalcCrc8Str == CRC)
+            if (par("CRC").intValue() == 1)
             {
-                // send the ACK
-                // Because there is no modification
-                dataMsg->setPiggy(1);
-                bitModded = '0';
+                string CRC = dataMsg->getMycheckbits();
+                checkCRC(CRC, payload);
             }
             else
             {
-                // There was atleast one bit error.
-
-                bitModded = '1';
-                dataMsg->setPiggy(0);
+                int t = checkHamming(payload); // Location of the wrong bit
+                if (t != 0 && t < int(payload.size()))
+                {
+                    payload = correctHamming(payload, t - 1);
+                    payload = removeHamming(payload);
+                    output->printFixedFrame(nodeId, t, payload);
+                }
+                // check if the error has been removed
+                t = checkHamming(payload);
+                if (t != 0)
+                {
+                    EV << "Corrupted frame\n";
+                }
             }
-
+            ///TODO:: the following parts need to be changed as we would send msg from here
             if (prevMessageSeqNum == dataMsg->getSeq_Num())
             {
                 // The message is duplicated
@@ -357,4 +312,180 @@ void Node::handleMessage(cMessage *msg)
             prevMessageSeqNum = dataMsg->getSeq_Num(); // in the first time, prevMessageSeqNum = -1, so the first message will be sent with ACK always
         }
     }
+}
+
+void Node::checkCRC(string CRC, string payload)
+{ // this only to check the CRC
+    // we can't rerequest the corrupted frame as it would be modified again
+    Crc *crcObj = new Crc();
+    unsigned int reCalcCrc8 = crcObj->crc8(payload);
+    stringstream ss;
+    ss << reCalcCrc8;
+    string reCalcCrc8Str = ss.str();
+    if (reCalcCrc8Str == CRC)
+    {
+        EV << "CRC:the recieved frame has no modification error" << endl;
+    }
+    else
+    {
+        EV << "CRC:One bit has been modified" << endl;
+    }
+}
+string Node::calcParity(string msg, int position)
+{
+    int count = 0;
+    int i = position;
+    int temp = i;
+    while (i < int(msg.size()))
+    {
+        for (i; (i < temp + position + 1) && (i < msg.size()); i++)
+        {
+            if (msg[i] == '1')
+            {
+                count++;
+            }
+        }
+        i = i + (position + 1);
+        temp = i;
+    }
+
+    if (count % 2 == 0)
+        msg[position] = '0';
+    else
+        msg[position] = '1';
+    return msg;
+}
+string Node::addHamming(string payload)
+{
+    int r = 0;
+    while (payload.size() + r + 1 > pow(2, r))
+        r++;
+
+    string newpayload = "";
+    int k = 0, l = 0;
+    for (unsigned int i = 0; i < payload.size() + r; i++)
+    {
+        int temp = pow(2, l) - 1;
+        if (i == temp)
+        {
+            newpayload.push_back('0');
+            l++;
+        }
+        else
+        {
+            newpayload.push_back(payload[k]);
+            k++;
+        }
+    }
+    int i = 0;
+    l = 0;
+    while (i < int(newpayload.size()))
+    {
+        newpayload = calcParity(newpayload, i);
+        l++;
+        i = pow(2, l) - 1;
+    }
+    return newpayload;
+}
+bool Node::checkParity(string msg, int position)
+{
+    int count = 0;
+    int i = position;
+    int temp = i;
+    while (i < msg.size())
+    {
+        for (i; (i < temp + position + 1) && (i < msg.size()); i++)
+        {
+            if (msg[i] == '1')
+            {
+                count++;
+            }
+        }
+        i = i + (position + 1);
+        temp = i;
+    }
+
+    if (count % 2 == 0)
+        return false;
+    else
+        return true;
+}
+int Node::checkHamming(string msg)
+{
+    int i = 0;
+    int l = 0;
+    vector<int> wrong;
+    while (i < int(msg.size()))
+    {
+        int position = i + 1;
+        if (checkParity(msg, i))
+        {
+            wrong.push_back(position);
+        }
+
+        l++;
+        i = pow(2, l) - 1;
+    }
+    int sum = 0;
+    for (int i = 0; i < int(wrong.size()); i++)
+        sum += wrong[i];
+    return sum;
+}
+string Node::correctHamming(string msg, int position)
+{
+    if (msg[position] == '0')
+        msg[position] = '1';
+    else
+        msg[position] = '0';
+    return msg;
+}
+string Node::removeHamming(string msg)
+{
+    string newmsg;
+    int i = 0, l = 0;
+    while (i < int(msg.size()))
+    {
+        if (i == pow(2, l) - 1)
+        {
+            i++;
+            l++;
+            continue;
+        }
+        newmsg.push_back(msg[i]);
+        i++;
+    }
+    return newmsg;
+}
+string Node::oneBitMod(string payload)
+{
+    // generate a random integer between 1 and payload length-1 (select random character)
+    int randomIndex = intuniform(1, payload.size() - 1);
+
+    // choose a random number as the bit index for the randomly chosen charachter
+    int randomBitIndex = rand() % 8;
+
+    // flip the bit at that index to a random bit
+    payload[randomIndex] = payload[randomIndex] ^ (1 << randomBitIndex);
+    return payload;
+}
+string Node::bitStuffing_Framing(string payload)
+{
+    int size = payload.size();
+    int add = 0;
+
+    for (int i = 0; i < size; i++)
+    {
+        if (payload[i] == '$' || payload[i] == '/')
+            add++;
+    }
+    for (int i = 0; i < size + add; i++)
+    {
+        if (payload[i] == '$' || payload[i] == '/')
+        {
+            payload.insert(i, 1, '/');
+            i++;
+        }
+    }
+    payload = "$" + payload + "$";
+    return payload;
 }

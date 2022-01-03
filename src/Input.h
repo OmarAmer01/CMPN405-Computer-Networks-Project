@@ -36,6 +36,7 @@ public:
     void closeLogFile(int senderID);
     void writeDropMsg(int nodeID, int msgID);
     void writeTimeOut(int nodeID, int msgID , double t);
+    void printFixedFrame(int nodeID,int position, string payload);
     string fname;
 
 private:

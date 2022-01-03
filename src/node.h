@@ -32,8 +32,17 @@ class Node : public cSimpleModule
 protected:
   virtual void initialize();
   virtual void handleMessage(cMessage *msg);
+  void readNodeFile(CtrlMsg_Base *);
   Input *output;
-
+  string calcParity(string msg, int position);
+  string addHamming(string payload);
+  string oneBitMod(string payload);
+  string bitStuffing_Framing(string payload);
+  void checkCRC(string CRC, string payload);
+  int checkHamming(string msg);
+  bool checkParity(string msg, int position);
+  string correctHamming(string msg, int position);
+  string removeHamming(string msg);
 public:
   int duplicates = 0;
   int losses=0;

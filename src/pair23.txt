@@ -1,23 +1,23 @@
-- node2 sends message with id=0 and content= $Sherlock Holmes is a fictional detective$ at 2 and piggybacking ACK 1
-- node3 received message with id=0 and content= $Sherlock Holmes is a fictional detective$ at 2 and piggybacking ACK 0
-- node2 sends message with id=1 and content= $created by British author/$ Sir Arthur Conan Doyle.$ at 2.2 with  duplicated, and piggybacking ACK 1
-- node3 received message with id=1 and content= $created by British author/$ Sir Arthur Conan Doyle.$ at 2.2 and piggybacking ACK 1
+- node2 sends message with id=0 and content= 00$0She0rlock H0olmes is a fict0ional detective$ at 2 and piggybacking ACK 1
+- node3 received message with id=0 and content= 00$0She0rlock H0olmes is a fict0ional detective$ at 2 and piggybacking NACK 0
+- node2 sends message with id=1 and content= 00$0cre0ated by0 British author0/$ Sir Arthur Conan Doyle.$ at 2.2 with  duplicated, and piggybacking ACK 1
+- node3 received message with id=1 and content= 00$0cre0ated by0 British author0/$ Sir Arthur Conan Doyle.$ at 2.2 and piggybacking NACK 1
 - node3 drops message with id=1
-- node2 sends message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 2.4 with  loss, and piggybacking ACK 1
+- node2 sends message with id=2 and content= 00$0Ref0erring 0to himself as a0// "consulting detective" in th0e stories,$ at 2.4 with  loss, and piggybacking ACK 1
 - node2 timeout for message id=2at t=2.6
-- node2 sends message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 7.4 with  loss, and piggybacking ACK 1
-- node3 received message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 7.4 and piggybacking ACK 2
-- node2 sends message with id=3 and content= $Holmes is known for his proficiency with observation,$ at 7.6 and piggybacking ACK 1
-- node3 received message with id=3 and content= $Holmes is known for his proficiency with observation,$ at 7.6 and piggybacking ACK 3
-- node2 sends message with id=4 and content= $deduction, forensic science,$ at 7.8 and piggybacking ACK 1
-- node3 received message with id=4 and content= $deduction, forensic science,$ at 7.8 and piggybacking ACK 4
-- node2 sends message with id=5 and content= $and// logical reasoning/$ that borders on the fantastic,$ at 8 and piggybacking ACK 1
-- node3 received message with id=5 and content= $and// logical reasoning/$ that borders on the fantastic,$ at 8 and piggybacking ACK 5
-- node2 sends message with id=6 and content= $which he employs when investigating cases for a wide variety of clients,$ at 8.2 with  delay, loss, and piggybacking ACK 1
+- node2 sends message with id=2 and content= 00$0Ref0erring 0to himself as a0// "consulting detective" in th0e stories,$ at 7.4 with  loss, and piggybacking ACK 1
+- node3 received message with id=2 and content= 00$0Ref0erring 0to himself as a0// "consulting detective" in th0e stories,$ at 7.4 and piggybacking NACK 2
+- node2 sends message with id=3 and content= 00$0Hol0mes is 0known for his p0roficiency with observation,$ at 7.6 and piggybacking ACK 1
+- node3 received message with id=3 and content= 00$0Hol0mes is 0known for his p0roficiency with observation,$ at 7.6 and piggybacking NACK 3
+- node2 sends message with id=4 and content= 00$0ded0uction,0 forensic scien0ce,$ at 7.8 and piggybacking ACK 1
+- node3 received message with id=4 and content= 00$0ded0uction,0 forensic scien0ce,$ at 7.8 and piggybacking NACK 4
+- node2 sends message with id=5 and content= 00$0and0// logi0cal reasoning/$0 that borders on the fantastic,0$ at 8 and piggybacking ACK 1
+- node3 received message with id=5 and content= 00$0and0// logi0cal reasoning/$0 that borders on the fantastic,0$ at 8 and piggybacking NACK 5
+- node2 sends message with id=6 and content= 00$0whi0ch he e0mploys when inv0estigating cases for a wide var0iety of clients,$ at 8.2 with  delay, loss, and piggybacking ACK 1
 - node2 timeout for message id=6at t=23.2
-- node2 sends message with id=6 and content= $which he employs when investigating cases for a wide variety of clients,$ at 23.2 with  delay, loss, and piggybacking ACK 1
-- node3 received message with id=6 and content= $which he employs when investigating cases for a wide variety of clients,$ at 23.2 and piggybacking ACK 6
-- node2 sends message with id=7 and content= $including Scotland Yard.$ at 23.4 and piggybacking ACK 1
+- node2 sends message with id=6 and content= 00$0whi0ch he e0mploys when inv0estigating cases for a wide var0iety of clients,$ at 23.2 with  delay, loss, and piggybacking ACK 1
+- node3 received message with id=6 and content= 00$0whi0ch he e0mploys when inv0estigating cases for a wide var0iety of clients,$ at 23.2 and piggybacking NACK 6
+- node2 sends message with id=7 and content= 00$0inc0luding 0Scotland Yard.$ at 23.4 and piggybacking ACK 1
 - node2 end of input file
 ------------------------------------------------------
 - total transmission time= 23.4

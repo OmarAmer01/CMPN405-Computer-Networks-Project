@@ -1,19 +1,19 @@
-- node0 sends message with id=0 and content= $A flower, sometimes known as a bloom or blos3om$ at 2 with modification, duplicated, and piggybacking ACK 1
-- node1 received message with id=0 and content= $A flower, sometimes known as a bloom or blos3om$ at 2 with modification, and piggybacking NACK 0
+- node0 sends message with id=0 and content= 00$0A f0lower, 0sometimes known0 as a bloom or blosSom$ at 2 with modification, duplicated, and piggybacking ACK 1
+- node1 received message with id=0 and content= 00$0A f0lower, 0sometimes known0 as a bloom or blosSom$ at 2 and piggybacking NACK 0
 - node1 drops message with id=0
-- node0 sends message with id=1 and content= $is the reproductive/$ structure found in flowering plants$ at 2.2 and piggybacking ACK 1
-- node1 received message with id=1 and content= $is the reproductive/$ structure found in flowering plants$ at 2.2 and piggybacking ACK 1
-- node0 sends message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 2.4 with  loss, and piggybacking ACK 1
+- node0 sends message with id=1 and content= 00$0is 0the rep0roductive/$ str0ucture found in flowering plant0s$ at 2.2 and piggybacking ACK 1
+- node1 received message with id=1 and content= 00$0is 0the rep0roductive/$ str0ucture found in flowering plant0s$ at 2.2 and piggybacking NACK 1
+- node0 sends message with id=2 and content= 00$0(pl0ants of0 the division M0agnoliophyta, also called// ang0iosperms/$).$ at 2.4 with  loss, and piggybacking ACK 1
 - node0 timeout for message id=2at t=2.6
-- node0 sends message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 7.4 with  loss, and piggybacking ACK 1
-- node1 received message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 7.4 and piggybacking ACK 2
-- node0 sends message with id=3 and content= $The biological function of a flower is to facilitate reproduction,$ at 7.6 and piggybacking ACK 1
-- node1 received message with id=3 and content= $The biological function of a flower is to facilitate reproduction,$ at 7.6 and piggybacking ACK 3
-- node0 sends message with id=4 and content= $usually by providing a mechanism for the union of sperm with eggs.$ at 7.8 with  delay, and piggybacking ACK 1
-- node1 received message with id=4 and content= $usually by providing a mechanism for the union of sperm with eggs.$ at 17.8 and piggybacking ACK 4
-- node0 sends message with id=5 and content= $Flowers may facilitate outcrossing/$$ at 18 and piggybacking ACK 1
-- node1 received message with id=5 and content= $Flowers may facilitate outcrossing/$$ at 18 and piggybacking ACK 5
-- node0 sends message with id=6 and content= $(fusion of sperm and eggs from different individuals in a population)$ at 18.2 and piggybacking ACK 1
+- node0 sends message with id=2 and content= 00$0(pl0ants of0 the division M0agnoliophyta, also called// ang0iosperms/$).$ at 7.4 with  loss, and piggybacking ACK 1
+- node1 received message with id=2 and content= 00$0(pl0ants of0 the division M0agnoliophyta, also called// ang0iosperms/$).$ at 7.4 and piggybacking NACK 2
+- node0 sends message with id=3 and content= 00$0The0 biolog0ical function o0f a flower is to facilitate rep0roduction,$ at 7.6 and piggybacking ACK 1
+- node1 received message with id=3 and content= 00$0The0 biolog0ical function o0f a flower is to facilitate rep0roduction,$ at 7.6 and piggybacking NACK 3
+- node0 sends message with id=4 and content= 00$0usu0ally bx0 providing a me0chanism for the union of sperm 0with eggs.$ at 7.8 with modification, delay, and piggybacking ACK 1
+- node1 received message with id=4 and content= 00$0usu0ally bx0 providing a me0chanism for the union of sperm 0with eggs.$ at 17.8 and piggybacking NACK 4
+- node0 sends message with id=5 and content= 00$0Flo0wers ma0y facilitate ou0tcrossing/$$ at 18 and piggybacking ACK 1
+- node1 received message with id=5 and content= 00$0Flo0wers ma0y facilitate ou0tcrossing/$$ at 18 and piggybacking NACK 5
+- node0 sends message with id=6 and content= 00$0(fu0sion of0 sperm and eggs0 from different individuals in 0a population)$ at 18.2 and piggybacking ACK 1
 - node0 end of input file
 ------------------------------------------------------
 - total transmission time= 18.2

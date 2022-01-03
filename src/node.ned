@@ -23,6 +23,8 @@ simple Node
     parameters:
         double delayPeriod;
         double timeOutPeriod;
+        int windowSize;
+        int CRC;
     gates:
         output dataOut;
         input dataIn;

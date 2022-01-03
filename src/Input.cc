@@ -338,7 +338,28 @@ void Input::writeTimeOut(int nodeID, int msgID, double t)
     my_file << "- node" << nodeID << " timeout for message id=" << msgID << "at t=" << t << endl;
     EV << "- node" << nodeID << " timeout for message id=" << msgID << "at t=" << t << endl;
 }
-
+void Input::printFixedFrame(int nodeID, int position, string payload)
+{
+    fstream my_file;
+    string sender;
+    string receiver;
+    if (nodeID % 2 == 0)
+    {
+        sender = to_string(nodeID);
+        receiver = to_string(nodeID + 1);
+    }
+    else
+    {
+        sender = to_string(nodeID - 1);
+        receiver = to_string(nodeID);
+    }
+    string FileName = "pair" + sender + receiver + ".txt";
+    my_file.open(FileName, std::ios::app);
+    my_file << "- node" << nodeID << "recieved a corrupted frame at:" << position << endl
+            << "        Frame after correction" << payload<<endl;
+    EV << "- node" << nodeID << "recieved a corrupted frame at:" << position << endl
+            << "        Frame after correction" << payload<<endl;
+}
 Input::~Input()
 {
     // TODO Auto-generated destructor stub

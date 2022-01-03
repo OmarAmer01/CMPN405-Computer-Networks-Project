@@ -26,34 +26,34 @@ network MainNet
             @display("p=74,55;i=block/socket");
         }
         node1: Node {
-            @display("p=353,62;i=block/socket");
+            @display("p=233,16;i=block/socket");
         }
         node2: Node {
-            @display("p=74,55;i=block/socket");
+            @display("p=317,16;i=block/socket");
         }
         node3: Node {
-            @display("p=353,62;i=block/socket");
+            @display("p=438,42;i=block/socket");
         }
         node4: Node {
-            @display("p=74,55;i=block/socket");
+            @display("p=424,126;i=block/socket");
         }
         node5: Node {
-            @display("p=353,62;i=block/socket");
+            @display("p=424,194;i=block/socket");
         }
     connections:
         coordinator.out1 --> node1.coordIn;
         coordinator.out0 --> node0.coordIn;
         node0.dataOut --> node1.dataIn;
         node1.dataOut --> node0.dataIn;
-        
+
         coordinator.out2 --> node2.coordIn;
         coordinator.out3 --> node3.coordIn;
         node2.dataOut --> node3.dataIn;
         node3.dataOut --> node2.dataIn;
-        
+
         coordinator.out4 --> node4.coordIn;
         coordinator.out5 --> node5.coordIn;
         node4.dataOut --> node5.dataIn;
         node5.dataOut --> node4.dataIn;
-        
+
 }
