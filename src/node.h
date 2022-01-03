@@ -56,6 +56,10 @@ public:
   int nodeId = 0;
   int othernodeID = 0;
   int prevMessageSeqNum = -1;
+  int firstmsg =0;
+  int totalMsgNum=0;
+  int allSent=0;
+  int otherNodeDoneSending=0;
   vector<nodeFileLine> nodeFileVector;
 };
 
