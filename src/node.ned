@@ -25,6 +25,8 @@ simple Node
         double timeOutPeriod;
         int windowSize;
         int CRC;
+        double SRdelay;
+        double channelDelay;
     gates:
         output dataOut;
         input dataIn;

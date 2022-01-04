@@ -30,7 +30,7 @@ public:
     vector<coordFileLine> parseCoordFile(string fileName); // returns a vector of parsed lines as structs.
     vector<nodeFileLine> parseNodeFile(string fileName);   // returns a vector of parsed lines as structs.
     void openLogFile(int senderID);
-    void WriteToFile(int nodeID,bool isSender, int msgID, string msg, double time, string errors, int ack);
+    void WriteToFile(int nodeID,bool isSender, int msgID, string msg, double time, string errors, int ack, int piggyNum);
     void WriteStatsLine(int senderID, double totalTime, int totalTranNum, double throuput);
     void WriteFinishLine(int senderID,  bool isSender);
     void closeLogFile(int senderID);
@@ -38,6 +38,7 @@ public:
     void writeTimeOut(int nodeID, int msgID , double t);
     void printFixedFrame(int nodeID,int position, string payload);
     string fname;
+
 
 private:
     coordFileLine parseCoordLine(string line);

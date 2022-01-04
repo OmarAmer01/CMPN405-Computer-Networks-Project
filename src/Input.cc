@@ -147,7 +147,7 @@ void Input::openLogFile(int nodeID)
     }
 }
 
-void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double time, string e, int ack)
+void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double time, string e, int ack , int piggyNum)
 {
     //otherNode ID might be used
     fstream my_file;
@@ -198,11 +198,11 @@ void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double
 
         my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
                 << " and content= " << msg << " at " << time << error
-                << " and piggybacking " << ackNack << " " << ack << endl;
+                << " and piggybacking " << ackNack << " " << piggyNum<< endl;
 
         EV << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
            << " and content= " << msg << " at " << time << error
-           << " and piggybacking " << ackNack << " " << ack << endl;
+           << " and piggybacking " << ackNack << " " <<  piggyNum<< endl;
     }
     else
     {
@@ -210,11 +210,11 @@ void Input::WriteToFile(int nodeID, bool isSender, int msgID, string msg, double
 
         my_file << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
                 << " and content= " << msg << " at " << time << error
-                << " and piggybacking " << ackNack << " " << msgID << endl;
+                << " and piggybacking " << ackNack << " " << piggyNum << endl;
 
         EV << "- node" << nodeID << " " << sendorNOT << " message with id=" << msgID
            << " and content= " << msg << " at " << time << error
-           << " and piggybacking " << ackNack << " " << msgID << endl;
+           << " and piggybacking " << ackNack << " " << piggyNum<< endl;
     }
 
     my_file.close();

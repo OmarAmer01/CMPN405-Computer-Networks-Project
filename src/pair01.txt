@@ -1,17 +1,25 @@
-- node1 sends message with id=0 and content= $a bow across its strings.$ at 2 and piggybacking ACK 1
-- node0 sends message with id=0 and content= $is the reproductive/$ structure found in flowering plants$ at 2 with  delay, and piggybacking ACK 1
-- node1 sends message with id=1 and content= $It can also be played by plucking$ at 12 and piggybacking ACK 1
-- node0 sends message with id=-1 and content= $The biological function of a flower is to facilitate reproduction,$ at 12 with  duplicated, and piggybacking ACK 1
+- node1 sends message with id=0 and content= $yasser$ at 2 and piggybacking ACK 0
+- node0 sends message with id=0 and content= $mod$ at 2.2 and piggybacking ACK 1
+- node1 timeout for message id=1at t=2.6
+- node1 sends message with id=2 and content= $amer$ at 2.4 and piggybacking ACK 1
+- node0 sends message with id=1 and content= $hello there$ at 2.6 and piggybacking NACK 3
+- node1 sends message with id=3 and content= $ashraf$ at 2.8 and piggybacking ACK 2
+- node0 sends message with id=2 and content= $mod$ at 3 and piggybacking ACK 0
+- node1 sends message with id=0 and content= $yasser$ at 3.2 and piggybacking ACK 3
+- node0 sends message with id=3 and content= $hello there$ at 3.4 and piggybacking ACK 1
+- node1 sends message with id=1 and content= $amer$ at 3.6 and piggybacking ACK 0
+- node0 sends message with id=0 and content= $mod$ at 3.8 and piggybacking ACK 2
+- node1 sends message with id=2 and content= $noor$ at 4 and piggybacking ACK 1
+- node0 sends message with id=1 and content= $hello there$ at 4.2 and piggybacking ACK 3
 - node0 end of input file
-- node1 sends message with id=2 and content= $and, in specialized cases, by striking$ at 12 and piggybacking ACK 1
-- node1 sends message with id=-1 and content= $(col legno).$ at 12 and piggybacking ACK 1
+- node1 sends message with id=3 and content= $ashraf$ at 4.4 and piggybacking ACK 2
 - node1 end of input file
-- node0 drops message with id=-1
 ------------------------------------------------------
-- total transmission time= 12
-- total number of transmissions= 3
-- the network throughput=0.166667
+- total transmission time= 4.6
+- total number of transmissions= 6
+- the network throughput=1.30435
+- node1 sends message with id=1 and content= $noor_lossssssssssss$ at 5.4 and piggybacking ACK 1
 ------------------------------------------------------
-- total transmission time= 12.01
-- total number of transmissions= 3
-- the network throughput=0.166528
+- total transmission time= 5.4
+- total number of transmissions= 6
+- the network throughput=1.11111

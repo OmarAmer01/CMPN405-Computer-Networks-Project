@@ -22,7 +22,9 @@
 #include "ctrlMsg_m.h"
 #include "dataMsg_m.h"
 #include "Crc.h"
-using namespace omnetpp;
+#include<math.h>
+#include <bitset>
+using namespace std;
 
 /**
  * TODO - Generated class
@@ -35,10 +37,13 @@ protected:
   void readNodeFile(CtrlMsg_Base *);
   Input *output;
   string calcParity(string msg, int position);
-  string addHamming(string payload);
+  string strToBitstring(string payload);
+  string bitStringToStr(string str);
+  char strToChar(string subStr);
   string oneBitMod(string payload);
   string bitStuffing_Framing(string payload);
   void checkCRC(string CRC, string payload);
+  string hammingCode(string payload);
   int checkHamming(string msg);
   bool checkParity(string msg, int position);
   string correctHamming(string msg, int position);
@@ -47,15 +52,22 @@ public:
   int duplicates = 0;
   int losses=0;
   bool nodeFileRead = false;
-  bool lost=false;
+  int lost=0;
   //int nodeStartingTime=-1;
   bool isStartingNode = false;
   double totalTrans_Time = 0.0;
   int totalNumberOfTrans = 0;
-  int id = -1; //message ID
+
+  int id = -1; //message ID  .....slider
+  int sWind=-1;
+  int fWind=-1;
+   // the following to should be circuilar
+  int expectedFrame=0;
+  int nxtFrametoBeSent=-1;
+
   int nodeId = 0;
   int othernodeID = 0;
-  int prevMessageSeqNum = -1;
+  int prevMessageSeqNum = -2; // for duplication check
   int firstmsg =0;
   int totalMsgNum=0;
   int allSent=0;
