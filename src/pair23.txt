@@ -1,31 +1,23 @@
-- node3 sends message with id=0 and content= $A cherry blossom is a flower of many trees of genus/$ Prunus or Prunus subg.$ at 5 with  delay, and piggybacking ACK 0
-- node2 sends message with id=0 and content= $Sherlock Holmes is a fictional detective$ at 5 and piggybacking ACK 1
-- node3 sends message with id=1 and content= $They are also known as Japanese cherry and Sakura$ at 7.21 with  delay, duplicated, and piggybacking ACK 1
-- node2 sends message with id=1 and content= $created by British author/$ Sir Arthur Conan Doyle.$ at 7.22 with  duplicated, and piggybacking ACK 2
-- node3 sends message with id=2 and content= $They generally refer to /$ ornamental cherry trees,$ at 7.22 and piggybacking ACK 2
-- node2 timeout for message id=2at t=7.6
-- node2 sends message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 8.4 with  loss, and piggybacking NACK 0
-- node3 sends message with id=3 and content= $not to be confused with cherry trees that// produce fruit for eating.$ at 7.41 and piggybacking NACK 0
-- node2 sends message with id=3 and content= $Holmes is known for his proficiency with observation,$ at 7.42 and piggybacking ACK 3
-- node2 sends message with id=0 and content= $deduction, forensic science,$ at 7.6 and piggybacking ACK 3
-- node2 sends message with id=1 and content= $and// logical reasoning/$ that borders on the fantastic,$ at 7.61 and piggybacking ACK 0
-- node3 sends message with id=0 and content= $It is considered// the national flower of Japan.$ at 7.62 with modification, and piggybacking NACK 2
+- node2 sends message with id=0 and content= $Sherlock Holmes is a fictional detective$ at 3 and piggybacking ACK 0
+- node3 sends message with id=0 and content= $A cherry blossom is a flower of many trees of genus/$ Prunus or Prunus subg.$ at 4.2 with  delay, and piggybacking ACK 1
+- node2 sends message with id=1 and content= $created by British author/$ Sir Arthur Conan Doyle.$ at 4.21 with  duplicated, and piggybacking ACK 1
+- node3 sends message with id=1 and content= $They are also known as Japanese cherry and Sakura$ at 5.41 with  delay, duplicated, and piggybacking ACK 2
+- node3 drops message with id=1
+- node2 timeout for message id=2at t=5.8
+- node2 drops message with id=1
+- node2 sends message with id=3 and content= $Holmes is known for his proficiency with observation,$ at 5.8 and piggybacking ACK 2
+- node3 sends message with id=2 and content= $They generally refer to /$ ornamental cherry trees,$ at 6 and piggybacking NACK 3
+- node2 sends message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 6.1 and piggybacking ACK 0
+- node2 sends message with id=0 and content= $deduction, forensic science,$ at 6.2 and piggybacking ACK 3
+- node3 sends message with id=3 and content= $not to be confused with cherry trees that// produce fruit for eating.$ at 6.4 and piggybacking ACK 1
+- node2 sends message with id=1 and content= $and// logical reasoning/$ that borders on the fantastic,$ at 6.6 and piggybacking ACK 0
+- node3 sends message with id=0 and content= $It is considered// the national flower of Japan.$ at 6.8 with modification, and piggybacking ACK 2
 - node3 end of input file
-- node2 timeout for message id=2at t=10.82
-- node2 sends message with id=2 and content= $which he employs when investigating cases for a wide variety of clients,$ at 10.82 with  delay, loss, and piggybacking ACK 1
-- node2 sends message with id=3 and content= $including Scotland Yard.$ at 8 and piggybacking NACK -2
+- node2 timeout for message id=2at t=8.5
+- node2 sends message with id=3 and content= $including Scotland Yard.$ at 8.2 and piggybacking ACK 1
 - node2 end of input file
 ------------------------------------------------------
-- total transmission time= 8.01
-- total number of transmissions= 11
-- the network throughput=0.998752
-------------------------------------------------------
-- total transmission time= 8.02
-- total number of transmissions= 11
-- the network throughput=0.997506
-------------------------------------------------------
-- total transmission time= 8.2
-- total number of transmissions= 6
-- the network throughput=0.609756
-- node2 sends message with id=2 and content= $Referring to himself as a// "consulting detective" in the stories,$ at 8.4 and piggybacking ACK 0
-- node2 sends message with id=2 and content= $which he employs when investigating cases for a wide variety of clients,$ at 10.82 and piggybacking ACK 1
+- total transmission time= 8.4
+- total number of transmissions= 17
+- the network throughput=0.595238
+- node2 sends message with id=2 and content= $which he employs when investigating cases for a wide variety of clients,$ at 8.5 and piggybacking ACK 0

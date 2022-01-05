@@ -9,4 +9,4 @@
 0000 is cheaper$ than that of equivalent ICE cars,
 0000 due to lower fueling and maintenance costs$$.
 0000 Charging an electric car can be done at a variety of charging stations;
-1100 these charging stations can be installed in both houses/ and public areas.
+1010 these charging stations can be installed in both houses/ and public areas.

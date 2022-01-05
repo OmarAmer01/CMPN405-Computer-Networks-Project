@@ -340,7 +340,7 @@ void Node::handleMessage(cMessage *msg)
     {
         //send Ack or nAck only
         // if you received the last msg from the other node
-        if (otherNodeDoneSending == 1 && lost==0)
+        if (otherNodeDoneSending == 1)
         //TODO: total number of transmissions should be edited to include transmission of both nodes
         {
             output->WriteStatsLine(nodeId, simTime().dbl(),otherNodeStat +total_num_msg + duplicates + losses, total_num_msg / simTime().dbl());
