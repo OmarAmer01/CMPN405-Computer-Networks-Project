@@ -53,6 +53,7 @@ public:
   int losses=0;
   bool nodeFileRead = false;
   int lost=0;
+  int lostFrame=0;
   //int nodeStartingTime=-1;
   bool isStartingNode = false;
   double totalTrans_Time = 0.0;
@@ -67,11 +68,12 @@ public:
 
   int nodeId = 0;
   int othernodeID = 0;
-  int prevMessageSeqNum = -2; // for duplication check
+  int prevMessageSeqNum = -1; // for duplication check
   int firstmsg =0;
-  int totalMsgNum=0;
+  int total_num_msg=0;
   int allSent=0;
   int otherNodeDoneSending=0;
+  int otherNodeStat=0;
   vector<nodeFileLine> nodeFileVector;
 };
 

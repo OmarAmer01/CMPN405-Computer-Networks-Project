@@ -1,25 +1,30 @@
-- node1 sends message with id=0 and content= $yasser$ at 2 and piggybacking ACK 0
-- node0 sends message with id=0 and content= $mod$ at 2.2 and piggybacking ACK 1
-- node1 timeout for message id=1at t=2.6
-- node1 sends message with id=2 and content= $amer$ at 2.4 and piggybacking ACK 1
-- node0 sends message with id=1 and content= $hello there$ at 2.6 and piggybacking NACK 3
-- node1 sends message with id=3 and content= $ashraf$ at 2.8 and piggybacking ACK 2
-- node0 sends message with id=2 and content= $mod$ at 3 and piggybacking ACK 0
-- node1 sends message with id=0 and content= $yasser$ at 3.2 and piggybacking ACK 3
-- node0 sends message with id=3 and content= $hello there$ at 3.4 and piggybacking ACK 1
-- node1 sends message with id=1 and content= $amer$ at 3.6 and piggybacking ACK 0
-- node0 sends message with id=0 and content= $mod$ at 3.8 and piggybacking ACK 2
-- node1 sends message with id=2 and content= $noor$ at 4 and piggybacking ACK 1
-- node0 sends message with id=1 and content= $hello there$ at 4.2 and piggybacking ACK 3
-- node0 end of input file
-- node1 sends message with id=3 and content= $ashraf$ at 4.4 and piggybacking ACK 2
+- node1 sends message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 2.01 with  duplicated, and piggybacking ACK 0
+- node0 sends message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 2.21 with  duplicated, and piggybacking ACK 1
+- node0 drops message with id=0
+- node1 sends message with id=1 and content= $is a natural light display in Earth's sky,$ at 2.4 and piggybacking ACK 1
+- node1 drops message with id=0
+- node0 timeout for message id=1at t=2.8
+- node0 sends message with id=2 and content= $predominantly seen in high-latitude regions$ at 2.81 with  duplicated, and piggybacking ACK 2
+- node1 sends message with id=2 and content= $predominantly seen in high-latitude regions$ at 3.01 with  duplicated, and piggybacking NACK 2
+- node1 drops message with id=2
+- node0 sends message with id=1 and content= $is a natural light display in Earth's sky,$ at 3.1 and piggybacking ACK 0
+- node0 sends message with id=3 and content= $(around the Arctic// and Antarctic).$ at 3.21 with modification, duplicated, and piggybacking ACK 3
+- node0 drops message with id=2
+- node1 sends message with id=3 and content= $(around the Arctic// and Antarctic).$ at 3.41 with modification, duplicated, and piggybacking ACK 0
+- node1 drops message with id=3
+- node0 sends message with id=0 and content= $Auroras display dynamic patterns of brilliant lights//$ at 3.6 and piggybacking ACK 0
+- node0 drops message with id=3
+- node1 sends message with id=0 and content= $Auroras display dynamic patterns of brilliant lights//$ at 3.8 and piggybacking ACK 1
+- node0 sends message with id=1 and content= $that appear as curtains,$ at 4 and piggybacking ACK 1
+- node1 sends message with id=1 and content= $that appear as curtains,$ at 5.2 with  delay, and piggybacking ACK 2
+- node0 sends message with id=2 and content= $rays, spirals/$$ at 5.2 and piggybacking ACK 2
+- node1 timeout for message id=2at t=5.6
+- node1 sends message with id=3 and content= $or dynamic flickers covering the entire sky/$$ at 5.6 with modification, and piggybacking ACK 3
 - node1 end of input file
+- node0 sends message with id=3 and content= $or dynamic flickers covering the entire sky/$$ at 5.8 with modification, and piggybacking NACK 3
+- node0 end of input file
+- node1 sends message with id=2 and content= $rays, spirals/$$ at 5.9 and piggybacking ACK 0
 ------------------------------------------------------
-- total transmission time= 4.6
-- total number of transmissions= 6
-- the network throughput=1.30435
-- node1 sends message with id=1 and content= $noor_lossssssssssss$ at 5.4 and piggybacking ACK 1
-------------------------------------------------------
-- total transmission time= 5.4
-- total number of transmissions= 6
-- the network throughput=1.11111
+- total transmission time= 6
+- total number of transmissions= 24
+- the network throughput=1.33333

@@ -33,6 +33,7 @@ void Node::initialize()
 
 void Node::handleMessage(cMessage *msg)
 {
+    int ack=1;
 
     if (dynamic_cast<CtrlMsg_Base *>(msg))
     {
@@ -48,7 +49,7 @@ void Node::handleMessage(cMessage *msg)
         ctrlMsg->setName("selfCtrlMsg");
         Input *input = new Input();
         this->nodeFileVector = input->parseNodeFile(ctrlMsg->getFName());
-
+        total_num_msg = nodeFileVector.size();
         if (!ctrlMsg->getStart())
         {
             // not starting node
@@ -80,20 +81,17 @@ void Node::handleMessage(cMessage *msg)
             EV << "Node"<< nodeId<<"has recieved a self msg" << endl;
             DataMsg_Base *sendMsg = check_and_cast<DataMsg_Base *>(msg);
             output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
-                                           sendMsg->getM_Payload(), simTime().dbl(), "0000", 1, sendMsg->getPiggyID() );
-            send(sendMsg,"dataOut");
-           // lost++;
+                                           sendMsg->getM_Payload(), simTime().dbl(), "0000", 1, 0);
+            //send(sendMsg,"dataOut");
+            lost++;
             return;
         }
     }
-int ack=1;
+
     { // receive
         if (!(firstmsg == -1))
         {
 
-
-            if (isStartingNode == true)
-                EV << "Starting node ...." << endl;
             firstmsg = 0;
             char bitModded = '0';
             char packetDup = '0';
@@ -115,12 +113,15 @@ int ack=1;
             else
             {
                 expectedFrame=(dataMsg->getSeq_Num() +1);
+                lostFrame=dataMsg->getSeq_Num();
                 ack=0;
             }
             if (dataMsg->getRecievingTime() == -1)
             {
                 EV << "The other node has finished" << endl;
                 otherNodeDoneSending = 1;
+                otherNodeStat=dataMsg->getKind();
+
             }
             // Convert the CRC integer into a string.
             //increase the # of trans and trnastime
@@ -151,20 +152,24 @@ int ack=1;
                 }
 
             }
-            if (prevMessageSeqNum == dataMsg->getSeq_Num())
+            if (prevMessageSeqNum == dataMsg->getSeq_Num() && dataMsg->getSeq_Num() !=-1)
             {
                 // The message is duplicated
                 output->writeDropMsg(nodeId, dataMsg->getSeq_Num());
+                prevMessageSeqNum = dataMsg->getSeq_Num();
+                return;
             }
+            prevMessageSeqNum = dataMsg->getSeq_Num();
         }
     }
+
     firstmsg=1;
+
     if (allSent == 0) // send
     {
         //send the expected frame
         id++;
         nodeFileLine inputLine;
-        int total_num_msg = nodeFileVector.size();
         inputLine = nodeFileVector[id];
         //get all the inf. needed from the inputLine (payload, error bits)
         string errorBits = inputLine.errorNibble;
@@ -182,15 +187,21 @@ int ack=1;
         //frame and send the msg
         DataMsg_Base *sendMsg = new DataMsg_Base(payload.c_str());
 
-        if (id+lost == total_num_msg - 1)
+        if (id == total_num_msg - 1)
+        {
             sendMsg->setRecievingTime(-1);
+            sendMsg->setKind( total_num_msg + duplicates + losses);
+        }
 
         sendMsg->setSeq_Num(id);
         sendMsg->setPiggyID(expectedFrame%(2*par("windowSize").intValue()));
         if (ack==1)
             sendMsg->setPiggy(1);
         else
+        {
             sendMsg->setPiggy(0);
+            sendMsg->setPiggyID(lostFrame%(2*par("windowSize").intValue()));
+        }
 
         // we need to frame the payload before sending it
         payload = bitStuffing_Framing(payload);
@@ -240,80 +251,86 @@ int ack=1;
 
         string errorBitsWOmod = errorBits.substr(1, 3);
         if (errorBitsWOmod == "001")
-        {                                                                      // Delay Only
+        {
+            output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
+                                            sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue(), errorBits, ack, sendMsg->getPiggyID());// Delay Only
             sendDelayed(sendMsg, par("delayPeriod").doubleValue(), "dataOut"); // Send the message after the delay specified in the .ini file
         }
         else if (errorBitsWOmod == "010")
         {
-            duplicates++;                                 // Dup only
+            output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
+                                            sendMsg->getM_Payload(), simTime().dbl() +0.01 , errorBits, ack, sendMsg->getPiggyID());
+            duplicates++;
             sendDelayed(sendMsg,par("channelDelay").doubleValue() , "dataOut");                     // Send the message
-            sendDelayed(sendMsg->dup(), 0.01, "dataOut"); // and its duplicate after a small delay
+            sendDelayed(sendMsg->dup(),par("channelDelay").doubleValue()+ 0.01, "dataOut"); // and its duplicate after a small delay
         }
         else if (errorBitsWOmod == "011")
         { // Dup & Delay
             duplicates++;
+            output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
+                                            sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() +0.01, errorBits, ack, sendMsg->getPiggyID());
             sendDelayed(sendMsg, par("delayPeriod").doubleValue()+ par("channelDelay").doubleValue() , "dataOut");               // Send the message after the delay specified in the .ini file
-            sendDelayed(sendMsg->dup(), par("delayPeriod").doubleValue() + 0.01, "dataOut"); // and its duplicate after a small delay
+            sendDelayed(sendMsg->dup(),par("channelDelay").doubleValue()+ par("delayPeriod").doubleValue() + 0.01, "dataOut"); // and its duplicate after a small delay
         }
-        else if (errorBitsWOmod == "100" && lost == false)
+        else if (errorBitsWOmod == "100" )
         { // Loss Only
             ///TODO: For all LOSS cases, we should send  new self cMessage
             losses++;
-            //lost--;
+            lost--;
             output->writeTimeOut(nodeId, (sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())), simTime().dbl() + 0.2); //decrement the id so that it would resend the message
-            //output->WriteToFile(nodeId, true, (sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
-             //                   sendMsg->getM_Payload(), simTime().dbl() + par("timeOutPeriod").doubleValue(), errorBits, 1);
+        //    output->WriteToFile(nodeId, true, (sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
+        //                        sendMsg->getM_Payload(), simTime().dbl() + par("timeOutPeriod").doubleValue(), errorBits, ack, sendMsg->getPiggyID());
             cMessage *lostFrame = new cMessage("lostFrame");
-            scheduleAt(  simTime(), lostFrame);
+            scheduleAt( par("channelDelay").doubleValue()+  simTime(), lostFrame);
             scheduleAt(simTime() + par("timeOutPeriod").doubleValue(), sendMsg); // wait for a perriod equals the delay at the reciever side
                                                                                  // to send the same message again
         }
-        else if (errorBitsWOmod == "101" && lost == false)
+        else if (errorBitsWOmod == "101")
         { // Loss & Delay
             losses++;
-            //lost--;
+            lost--;
             output->writeTimeOut(nodeId,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())), simTime().dbl() + par("timeOutPeriod").doubleValue() + par("delayPeriod").doubleValue());
-         //   output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
-           //                     sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), errorBits, 1);
+          //  output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
+          //                      sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), errorBits, ack, sendMsg->getPiggyID());
             cMessage *lostFrame = new cMessage("lostFrame");
-            scheduleAt(  simTime(), lostFrame);
+            scheduleAt( par("channelDelay").doubleValue()+  par("delayPeriod").doubleValue()+simTime(), lostFrame);
             scheduleAt(simTime() + par("timeOutPeriod").doubleValue() + par("delayPeriod").doubleValue(), sendMsg);
         }
-        else if (errorBitsWOmod == "110" && lost == false)
+        else if (errorBitsWOmod == "110" )
         { // Loss & Dup
             duplicates++;
             losses++;
-           // lost--;
+            lost--;
             output->writeTimeOut(nodeId,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())), simTime().dbl() + par("timeOutPeriod").doubleValue());
           //  output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
-            //                    sendMsg->getM_Payload(), simTime().dbl() + par("timeOutPeriod").doubleValue(), errorBits, 1);
+           //                     sendMsg->getM_Payload(), simTime().dbl() + par("timeOutPeriod").doubleValue()+0.01,errorBits, ack, sendMsg->getPiggyID());
             cMessage *lostFrame = new cMessage("lostFrame");
-            scheduleAt(  simTime(), lostFrame);
+            scheduleAt( par("channelDelay").doubleValue()+0.01+  simTime(), lostFrame);
             scheduleAt(simTime() + par("timeOutPeriod").doubleValue(), sendMsg);
         }
 
-        else if (errorBitsWOmod == "111" && lost == false)
+        else if (errorBitsWOmod == "111" )
         { // Loss & Dup & Delay
             duplicates++;
             losses++;
-           // lost--;
+            lost--;
             output->writeTimeOut(nodeId,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue()))
                             , simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue());
-//            output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
-  //                              sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), errorBits, 1);
+         //   output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
+           //                     sendMsg->getM_Payload(), simTime().dbl() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(),errorBits , ack, sendMsg->getPiggyID());
             cMessage *lostFrame = new cMessage("lostFrame");
-            scheduleAt(  simTime(), lostFrame);
+            scheduleAt(  par("channelDelay").doubleValue()+ simTime(), lostFrame);
             scheduleAt(simTime() + par("delayPeriod").doubleValue() + par("timeOutPeriod").doubleValue(), sendMsg);
         }
         else
         {
-            ///TODO: shouldbe send delayed
+
             output->WriteToFile(nodeId, true,(sendMsg->getSeq_Num())%( 2* (par("windowSize").intValue())),
                                 sendMsg->getM_Payload(), simTime().dbl(), errorBits, ack, sendMsg->getPiggyID() );
             sendDelayed(sendMsg, par("channelDelay").doubleValue(),"dataOut");
         }
 
-        if (id+lost == total_num_msg - 1 )
+        if (id == total_num_msg - 1 )
         {
             output->WriteFinishLine(nodeId, true);
             allSent = 1;
@@ -323,10 +340,10 @@ int ack=1;
     {
         //send Ack or nAck only
         // if you received the last msg from the other node
-        if (otherNodeDoneSending == 1)
+        if (otherNodeDoneSending == 1 && lost==0)
         //TODO: total number of transmissions should be edited to include transmission of both nodes
         {
-            output->WriteStatsLine(nodeId, simTime().dbl(), id + 1 + duplicates + losses, (id + 1) / simTime().dbl());
+            output->WriteStatsLine(nodeId, simTime().dbl(),otherNodeStat +total_num_msg + duplicates + losses, total_num_msg / simTime().dbl());
             return;
         }
         DataMsg_Base *m = new DataMsg_Base("waiting for you to finish");
