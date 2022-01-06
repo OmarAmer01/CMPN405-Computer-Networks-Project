@@ -1,36 +1,32 @@
-- node0 sends message with id=0 and content= $A flower, sometimes known as a bloom or blossom$ at 3.01 with modification, duplicated, and piggybacking ACK 0
+- node0 sends message with id=0 and content= $A flower, sometimes known as a bloom or blossom$ at 3 with modification, and piggybacking ACK 0
 - node1 sends message with id=0 and content= $The violin, sometimes known as a fiddle$ at 3.2 and piggybacking ACK 1
-- node1 drops message with id=0
-- node0 sends message with id=1 and content= $is the reproductive/$ structure found in flowering plants$ at 3.4 and piggybacking ACK 1
-- node1 sends message with id=1 and content= $is a wooden chordophone (string instrument)$ at 3.61 with  duplicated, and piggybacking ACK 2
-- node0 timeout for message id=2at t=4
-- node0 drops message with id=1
-- node0 sends message with id=3 and content= $The biological function of a flower is to facilitate reproduction,$ at 4 and piggybacking ACK 2
-- node1 timeout for message id=2at t=4.4
-- node0 sends message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 4.3 and piggybacking ACK 0
-- node1 timeout for message id=3at t=4.9
-- node1 sends message with id=0 and content= $It is the smallest and thus highest-pitched instrument$ at 4.61 and piggybacking ACK 0
-- node1 sends message with id=2 and content= $in the violin family.$ at 4.7 and piggybacking ACK 0
-- node0 sends message with id=0 and content= $usually by providing a mechanism for the union of sperm with eggs.$ at 5.81 with  delay, and piggybacking NACK 0
-- node1 sends message with id=3 and content= $Most violins have a hollow wooden body.$ at 4.9 and piggybacking ACK 0
-- node1 sends message with id=1 and content= $(soprano) in the family in regular use.$ at 5.81 and piggybacking ACK 1
-- node0 sends message with id=1 and content= $Flowers may facilitate outcrossing/$$ at 6.01 and piggybacking ACK 2
-- node1 sends message with id=2 and content= $[a] The violin typically has four strings,$ at 6.21 and piggybacking ACK 2
-- node0 sends message with id=2 and content= $(fusion of sperm and eggs from different individuals in a population)$ at 6.41 and piggybacking ACK 3
+- node0 timeout for message id=1at t=3.6
+- node0 timeout for message id=2at t=3.8
+- node0 sends message with id=3 and content= $The biological function of a flower is to facilitate reproduction,$ at 3.8 and piggybacking ACK 1
+- node0 sends message with id=1 and content= $is the reproductive/$ structure found in flowering plants$ at 3.9 and piggybacking ACK 0
+- node1 sends message with id=1 and content= $is a wooden chordophone (string instrument)$ at 4 and piggybacking NACK 2
+- node0 sends message with id=2 and content= $(plants of the division Magnoliophyta, also called// angiosperms/$).$ at 4.1 and piggybacking ACK 0
+- node0 sends message with id=0 and content= $usually by providing a mechanism for the union of sperm with eggs.$ at 4.21 with  duplicated, and piggybacking ACK 2
+- node1 sends message with id=2 and content= $in the violin family.$ at 4.4 and piggybacking ACK 1
+- node1 drops message with id=4
+- node0 sends message with id=1 and content= $Flowers may facilitate outcrossing/$$ at 4.6 and piggybacking ACK 3
+- node1 sends message with id=3 and content= $Most violins have a hollow wooden body.$ at 4.8 and piggybacking ACK 2
+- node0 sends message with id=2 and content= $(fusion of sperm and eggs from different individuals in a population)$ at 6 with  delay, and piggybacking ACK 0
 - node0 end of input file
-- node1 sends message with id=3 and content= $(some can have five/$), usually tuned in perfect$ at 6.61 and piggybacking ACK 3
-- node1 sends message with id=0 and content= $fifths with notes G3, D4, A4, E5,$ at 7.01 and piggybacking NACK -1
-- node1 timeout for message id=1at t=7.61
-- node1 sends message with id=2 and content= $a bow across its strings.$ at 7.61 and piggybacking ACK 0
-- node1 sends message with id=1 and content= $and is most commonly played by drawing$ at 7.91 and piggybacking ACK 0
-- node1 sends message with id=3 and content= $It can also be played by plucking$ at 8.01 and piggybacking NACK -1
-- node1 sends message with id=0 and content= $the strings/$ with the fingers (pizzicato)$ at 9.41 with modification, delay, and piggybacking NACK -1
-- node1 sends message with id=1 and content= $and, in specialized cases, by striking$ at 9.61 and piggybacking NACK -1
-- node1 sends message with id=2 and content= $the strings with the wooden side/$ of the bow$ at 10.02 with  duplicated, and piggybacking NACK -1
-- node0 drops message with id=14
-- node1 sends message with id=3 and content= $(col legno).$ at 10.41 and piggybacking NACK -1
+- node1 sends message with id=0 and content= $It is the smallest and thus highest-pitched instrument$ at 6 and piggybacking ACK 3
+- node1 sends message with id=1 and content= $(soprano) in the family in regular use.$ at 6.4 and piggybacking NACK -2
+- node1 sends message with id=2 and content= $[a] The violin typically has four strings,$ at 6.8 and piggybacking NACK -2
+- node1 sends message with id=3 and content= $(some can have five/$), usually tuned in perfect$ at 7.2 and piggybacking NACK -2
+- node1 sends message with id=0 and content= $fifths with notes G3, D4, A4, E5,$ at 7.6 and piggybacking NACK -2
+- node1 sends message with id=1 and content= $and is most commonly played by drawing$ at 8 and piggybacking NACK -2
+- node1 sends message with id=2 and content= $a bow across its strings.$ at 8.4 and piggybacking NACK -2
+- node1 sends message with id=3 and content= $It can also be played by plucking$ at 8.8 and piggybacking NACK -2
+- node1 sends message with id=0 and content= $the strings/$ with the fingers (pizzicato)$ at 9.2 and piggybacking NACK -2
+- node1 sends message with id=1 and content= $and, in specialized cases, by striking$ at 9.6 and piggybacking NACK -2
+- node1 sends message with id=2 and content= $the strings with the wooden side/$ of the bow$ at 10 and piggybacking NACK -2
+- node1 sends message with id=3 and content= $(col legno).$ at 10.4 and piggybacking NACK -2
 - node1 end of input file
 ------------------------------------------------------
-- total transmission time= 10.61
-- total number of transmissions= 31
-- the network throughput=0.659755
+- total transmission time= 10.6
+- total number of transmissions= 26
+- the network throughput=0.660377

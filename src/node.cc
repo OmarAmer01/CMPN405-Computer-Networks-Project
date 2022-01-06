@@ -200,7 +200,7 @@ void Node::handleMessage(cMessage *msg)
         else
         {
             sendMsg->setPiggy(0);
-            sendMsg->setPiggyID(lostFrame%(2*par("windowSize").intValue()));
+            sendMsg->setPiggyID((lostFrame-1)%(2*par("windowSize").intValue()));
         }
 
         // we need to frame the payload before sending it

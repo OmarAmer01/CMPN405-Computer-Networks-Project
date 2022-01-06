@@ -1,33 +1,33 @@
-- node4 sends message with id=0 and content= $An electric car is an automobile that is$ at 3 with modification, and piggybacking ACK 0
-- node5 sends message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 3.21 with  duplicated, and piggybacking ACK 1
-- node4 sends message with id=1 and content= $propelled by one or more electric motors,$ at 3.4 and piggybacking ACK 1
+- node4 sends message with id=0 and content= $An electric car is an automobile that is$ at 7 with modification, and piggybacking ACK 0
+- node5 sends message with id=0 and content= $/$An aurora, also known as the polar lights/$ or aurora polaris,$ at 7.21 with  duplicated, and piggybacking ACK 1
+- node4 sends message with id=1 and content= $propelled by one or more electric motors,$ at 7.4 and piggybacking ACK 1
 - node4 drops message with id=0
-- node5 sends message with id=1 and content= $is a natural light display in Earth's sky,$ at 3.6 and piggybacking ACK 2
-- node4 sends message with id=2 and content= $using energy stored in batteries.$ at 3.8 and piggybacking ACK 2
-- node5 sends message with id=2 and content= $predominantly seen in high-latitude regions$ at 4.01 with  duplicated, and piggybacking ACK 3
-- node4 sends message with id=3 and content= $Compared to internal combustion engine (ICE) vehicles,$ at 4.21 with  duplicated, and piggybacking ACK 3
+- node5 sends message with id=1 and content= $is a natural light display in Earth's sky,$ at 7.6 and piggybacking ACK 2
+- node4 sends message with id=2 and content= $using energy stored in batteries.$ at 7.8 and piggybacking ACK 2
+- node5 sends message with id=2 and content= $predominantly seen in high-latitude regions$ at 8.01 with  duplicated, and piggybacking ACK 3
+- node4 sends message with id=3 and content= $Compared to internal combustion engine (ICE) vehicles,$ at 8.21 with  duplicated, and piggybacking ACK 3
 - node4 drops message with id=2
-- node5 sends message with id=3 and content= $(around the Arctic// and Antarctic).$ at 4.41 with modification, duplicated, and piggybacking ACK 0
+- node5 sends message with id=3 and content= $(around the Arctic// and Antarctic).$ at 8.41 with modification, duplicated, and piggybacking ACK 0
 - node5 drops message with id=3
-- node4 sends message with id=0 and content= $electric cars are quieter,$ at 5.61 with  delay, duplicated, and piggybacking ACK 0
+- node4 sends message with id=0 and content= $electric cars are quieter,$ at 9.61 with  delay, duplicated, and piggybacking ACK 0
 - node4 drops message with id=3
-- node5 sends message with id=0 and content= $Auroras display dynamic patterns of brilliant lights//$ at 5.8 and piggybacking ACK 1
+- node5 sends message with id=0 and content= $Auroras display dynamic patterns of brilliant lights//$ at 9.8 and piggybacking ACK 1
 - node5 drops message with id=4
-- node4 sends message with id=1 and content= $have no exhaust emissions, and lower emissions overall.$ at 6 and piggybacking ACK 1
-- node5 sends message with id=1 and content= $that appear as curtains,$ at 6.2 and piggybacking ACK 2
-- node4 sends message with id=2 and content= $In the United States and the European Union,$ at 6.4 and piggybacking ACK 2
-- node5 sends message with id=2 and content= $rays, spirals/$$ at 6.6 and piggybacking ACK 3
-- node4 sends message with id=3 and content= $as of 2020, the total cost of ownership of recent electric vehicles$ at 6.8 with modification, and piggybacking ACK 3
-- node5 sends message with id=3 and content= $or dynamic flickers covering the entire sky/$$ at 7.01 with modification, duplicated, and piggybacking ACK 0
+- node4 sends message with id=1 and content= $have no exhaust emissions, and lower emissions overall.$ at 10 and piggybacking ACK 1
+- node5 sends message with id=1 and content= $that appear as curtains,$ at 10.2 and piggybacking ACK 2
+- node4 sends message with id=2 and content= $In the United States and the European Union,$ at 10.4 and piggybacking ACK 2
+- node5 sends message with id=2 and content= $rays, spirals/$$ at 10.6 and piggybacking ACK 3
+- node4 sends message with id=3 and content= $as of 2020, the total cost of ownership of recent electric vehicles$ at 10.8 with modification, and piggybacking ACK 3
+- node5 sends message with id=3 and content= $or dynamic flickers covering the entire sky/$$ at 11.01 with modification, duplicated, and piggybacking ACK 0
 - node5 end of input file
-- node4 sends message with id=0 and content= $is cheaper/$ than that of equivalent ICE cars,$ at 7.2 and piggybacking ACK 0
+- node4 sends message with id=0 and content= $is cheaper/$ than that of equivalent ICE cars,$ at 11.2 and piggybacking ACK 0
 - node4 drops message with id=7
-- node4 sends message with id=1 and content= $due to lower fueling and maintenance costs/$/$.$ at 7.6 and piggybacking NACK -1
-- node4 sends message with id=2 and content= $Charging an electric car can be done at a variety of charging stations;$ at 8 and piggybacking NACK -1
-- node4 sends message with id=3 and content= $these charging stations can be installed in both houses// and public areas.$ at 8.41 with modification, duplicated, and piggybacking NACK -1
+- node4 sends message with id=1 and content= $due to lower fueling and maintenance costs/$/$.$ at 11.6 and piggybacking NACK -2
+- node4 sends message with id=2 and content= $Charging an electric car can be done at a variety of charging stations;$ at 12 and piggybacking NACK -2
+- node4 sends message with id=3 and content= $these charging stations can be installed in both houses// and public areas.$ at 12.41 with modification, duplicated, and piggybacking NACK -2
 - node4 end of input file
 ------------------------------------------------------
-- total transmission time= 8.6
+- total transmission time= 12.6
 - total number of transmissions= 26
-- the network throughput=0.930233
+- the network throughput=0.634921
 - node5 drops message with id=11
